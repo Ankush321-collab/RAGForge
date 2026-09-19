@@ -1,0 +1,149 @@
+# =========================
+# Core Python
+# =========================
+python-dotenv
+pydantic
+pydantic-settings
+
+# =========================
+# Backend / API
+# =========================
+fastapi
+uvicorn[standard]
+python-multipart
+
+# =========================
+# Async / HTTP
+# =========================
+httpx
+aiohttp
+
+# =========================
+# PDF / Document Processing
+# =========================
+PyMuPDF
+pypdf
+pdfplumber
+
+# =========================
+# Document / Text Processing
+# =========================
+beautifulsoup4
+lxml
+tiktoken
+nltk
+spacy
+
+# =========================
+# Embeddings / NLP
+# =========================
+sentence-transformers
+transformers
+torch
+numpy
+scikit-learn
+
+# =========================
+# Vector Database
+# =========================
+chromadb
+langchain-chroma
+
+# =========================
+# Sparse Retrieval
+# =========================
+rank-bm25
+
+# =========================
+# Reranking
+# =========================
+FlagEmbedding
+
+# =========================
+# LLM / RAG Framework
+# =========================
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-mistralai
+
+# =========================
+# LangGraph / Agentic RAG
+# =========================
+langgraph
+langgraph-checkpoint
+
+# =========================
+# Model Providers
+# Install only the providers you actually use
+# =========================
+openai
+google-generativeai
+huggingface-hub
+
+# =========================
+# Multimodal / Vision
+# =========================
+Pillow
+opencv-python
+
+# =========================
+# OCR
+# =========================
+pytesseract
+
+# =========================
+# Tables / Data Processing
+# =========================
+pandas
+openpyxl
+
+# =========================
+# Graph RAG
+# =========================
+neo4j
+
+# =========================
+# AWS / S3
+# =========================
+boto3
+
+# =========================
+# Evaluation
+# =========================
+ragas
+datasets
+
+# =========================
+# Experimentation / Metrics
+# =========================
+scipy
+matplotlib
+seaborn
+
+# =========================
+# Testing
+# =========================
+pytest
+pytest-asyncio
+pytest-cov
+
+# =========================
+# Code Quality
+# =========================
+black
+isort
+ruff
+
+# =========================
+# Logging / Monitoring
+# =========================
+structlog
+
+# =========================
+# Serialization
+# =========================
+orjson
+PyYAML
+langchain-mistralai

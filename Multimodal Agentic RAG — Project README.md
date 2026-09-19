@@ -133,7 +133,7 @@ The objective is:
 
 Eventually the project should look approximately like:
 
-```text
+````text
                          USER
                            |
                            v
@@ -167,27 +167,98 @@ Eventually the project should look approximately like:
                            v
                     Hybrid Fusion
                            |
-                           v
-                       Reranker
-                           |
-                           v
-                  Parent/Child Retrieval
-                           |
-                           v
-                  Contextual Retrieval
-                           |
-                           v
-                   Multimodal Context
-                           |
-                           v
-                     LLM / VLM
-                           |
-                           v
-                 Answer + Citations
-                           |
-                           v
-                    Evaluation Layer
+
+## 5.1 Implementation File Map
+
+Use this map when starting a phase. Files marked **exists** are already present in
+this repository. Files marked **create** are the next files to implement for that
+phase. Keep the dependency direction clear:
+
+```text
+loader -> chunker -> embedding -> vector search -> RAG
+                              |
+                              +-> multimodal / graph / agent routing
+````
+
+| Phase   | Work                                                     | Files in this project                                                                                                                                                    |
+| ------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0       | Environment and shared settings                          | `requirements.txt` (exists), `backend/app/core/config.py` (exists), `backend/app/core/logging.py` (exists), `docker-compose.yml` (exists)                                |
+| 1A      | PDF loading, page text, metadata                         | `backend/app/ingestion/loader.py` (exists), `backend/tests/ingestion/test_loader.py` (create)                                                                            |
+| 1B      | Page chunking and chunk metadata                         | `backend/app/ingestion/chunker.py` (exists), `backend/tests/ingestion/test_chunker.py` (create)                                                                          |
+| 1C      | Text embeddings                                          | `backend/app/ingestion/embedding.py` (exists), `backend/tests/ingestion/test_embedding.py` (create)                                                                      |
+| 1D      | Vector similarity search                                 | `backend/app/retrieval/vector.py` (exists), `backend/tests/retrieval/test_vector.py` (create)                                                                            |
+| 1E      | Basic RAG answer generation and citations                | `backend/app/api/chat.py` (exists), `backend/app/api/search.py` (exists), `backend/tests/api/test_chat.py` (create)                                                      |
+| 2       | Object storage foundation                                | `backend/app/core/config.py`, `backend/app/api/documents.py` (exists), `backend/app/storage/s3.py` (create), `backend/tests/storage/test_s3.py` (create)                 |
+| 2A      | Upload documents to S3                                   | `backend/app/api/documents.py`, `backend/app/storage/s3.py`, `backend/tests/api/test_documents.py` (create)                                                              |
+| 2B      | Generate presigned URLs                                  | `backend/app/storage/s3.py`, `backend/app/api/documents.py`, `backend/tests/storage/test_presigned_urls.py` (create)                                                     |
+| 2C      | CDN and private asset delivery                           | `backend/app/storage/s3.py`, `backend/app/core/security.py` (exists), deployment configuration (create)                                                                  |
+| 3       | Advanced and parent-child chunking                       | `backend/app/ingestion/chunker.py`, `backend/app/retrieval/parent_child.py` (exists), `backend/tests/retrieval/test_parent_child.py` (create)                            |
+| 4       | BM25 sparse retrieval                                    | `backend/app/retrieval/bm25.py` (exists), `backend/tests/retrieval/test_bm25.py` (create)                                                                                |
+| 5       | Hybrid retrieval and RRF fusion                          | `backend/app/retrieval/hybrid.py` (exists), `backend/app/retrieval/bm25.py`, `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hybrid.py` (create)        |
+| 6       | Cross-encoder reranking                                  | `backend/app/retrieval/reranker.py` (exists), `backend/tests/retrieval/test_reranker.py` (create)                                                                        |
+| 7       | Query rewriting                                          | `backend/app/retrieval/query_transform.py` (exists), `backend/tests/retrieval/test_query_transform.py` (create)                                                          |
+| 8       | Query expansion and multi-query fusion                   | `backend/app/retrieval/query_transform.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_query_expansion.py` (create)                                |
+| 9       | HyDE retrieval                                           | `backend/app/retrieval/hyde.py` (exists), `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hyde.py` (create)                                             |
+| 10      | Parent-child context retrieval                           | `backend/app/retrieval/parent_child.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_parent_child.py` (create)                                      |
+| 11      | Metadata filtering                                       | `backend/app/retrieval/vector.py`, `backend/app/retrieval/hybrid.py`, `backend/app/api/search.py`, `backend/tests/retrieval/test_metadata_filtering.py` (create)         |
+| 12      | Contextualized chunks                                    | `backend/app/retrieval/contextual.py` (exists), `backend/app/ingestion/chunker.py`, `backend/tests/retrieval/test_contextual.py` (create)                                |
+| 13A     | Extract and store document images                        | `backend/app/multimodal/image_extractor.py` (exists), `backend/app/storage/s3.py`, `backend/tests/multimodal/test_image_extractor.py` (create)                           |
+| 13B     | Describe images with a vision model                      | `backend/app/multimodal/vision.py` (exists), `backend/tests/multimodal/test_vision.py` (create)                                                                          |
+| 13C-13D | Image and text-to-image retrieval                        | `backend/app/multimodal/vision.py`, `backend/app/multimodal/image_embedder.py` (create), `backend/app/retrieval/hybrid.py`                                               |
+| 13E     | Structured table extraction and questions                | `backend/app/multimodal/table_processor.py` (exists), `backend/tests/multimodal/test_table_processor.py` (create)                                                        |
+| 14      | Fuse text, image, table, and metadata results            | `backend/app/retrieval/hybrid.py`, `backend/app/multimodal/`, `backend/tests/multimodal/test_multimodal_retrieval.py` (create)                                           |
+| 15      | Extract entities and relationships                       | `backend/app/graph/entities.py` (exists), `backend/app/graph/relationships.py` (exists), `backend/app/graph/neo4j.py` (exists), `backend/tests/graph/`                   |
+| 15A     | Graph retrieval and vector/graph fusion                  | `backend/app/graph/graph_retrieval.py` (create), `backend/app/graph/neo4j.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/graph/test_graph_retrieval.py` (create) |
+| 16      | Agentic query routing                                    | `backend/app/agents/state.py` (exists), `backend/app/agents/router.py` (exists), `backend/app/agents/graph.py` (create), `backend/tests/agents/`                         |
+| 17      | Answer grounding and citation validation                 | `backend/app/agents/validator.py` (exists), `backend/app/api/chat.py`, `backend/tests/agents/test_validator.py` (create)                                                 |
+| 18      | Retrieval and generation evaluation                      | `backend/app/evaluation/dataset.py` (exists), `backend/app/evaluation/metrics.py` (exists), `data/evaluation/`, `backend/tests/evaluation/`                              |
+| 19      | Ablation experiments                                     | `backend/app/evaluation/ablation.py` (exists), `data/evaluation/processed/`, `backend/tests/evaluation/`                                                                 |
+| 20      | Query, retrieval, and model observability                | `backend/app/core/logging.py`, `backend/app/api/`, `backend/tests/api/`                                                                                                  |
+| 21      | FastAPI application endpoints                            | `backend/app/api/documents.py`, `backend/app/api/search.py`, `backend/app/api/chat.py`, `backend/app/api/health.py`, `backend/app/main.py` (create)                      |
+| 22      | Upload, chat, viewer, and source UI                      | `frontend/src/api/`, `frontend/src/components/`, `frontend/src/hooks/`, `frontend/src/pages/`, `frontend/package.json`                                                   |
+| 23      | Authentication, authorization, validation, and isolation | `backend/app/core/security.py`, `backend/app/api/`, `backend/tests/`                                                                                                     |
+| 24      | Containerized local services                             | `docker-compose.yml`, `docker/`, `backend/`, `frontend/`                                                                                                                 |
+| 25      | Production deployment and operations                     | `backend/app/`, `frontend/`, `docker/`, `docker-compose.yml`, deployment files (create)                                                                                  |
+
+### Phase 1 Connection
+
+Phase 1 must be implemented and tested in this order:
+
+```python
+from backend.app.ingestion.loader import load_document
+from backend.app.ingestion.chunker import chunk_document
+from backend.app.ingestion.embedding import embed_chunks
+
+document = load_document("data/raw/oops_notes.pdf")
+chunks = chunk_document(document, chunk_size=500, overlap=50)
+embedded_chunks = embed_chunks(chunks)
 ```
+
+The resulting records retain `document_id`, `page_number`, `text`, and
+`embedding`. Phase 1D consumes `embedded_chunks`; later phases should extend
+these records instead of rebuilding PDF extraction or chunking logic.
+v
+Reranker
+|
+v
+Parent/Child Retrieval
+|
+v
+Contextual Retrieval
+|
+v
+Multimodal Context
+|
+v
+LLM / VLM
+|
+v
+Answer + Citations
+|
+v
+Evaluation Layer
+
+````
 
 ---
 
@@ -236,7 +307,7 @@ Examples:
 BGE
 E5
 Nomic
-```
+````
 
 Later add image/multimodal embeddings.
 
@@ -253,7 +324,7 @@ Then use a production implementation.
 Recommended:
 
 ```text
-Qdrant
+ChromaDB
 ```
 
 Alternative:
@@ -264,7 +335,7 @@ Milvus
 pgvector
 ```
 
-Qdrant is a good learning choice because metadata filtering and vector search are straightforward.
+ChromaDB is a good learning choice for local development because persistence and vector search are straightforward.
 
 ## Graph database
 
@@ -1783,7 +1854,7 @@ Containerize:
 ```text
 Frontend
 Backend
-Qdrant
+ChromaDB
 Neo4j
 ```
 
@@ -1800,7 +1871,7 @@ Eventually:
 ```text
 Frontend
 Backend
-Qdrant
+ChromaDB
 Neo4j
        ↓
 AWS / Cloud
@@ -1831,7 +1902,7 @@ Final architecture:
                 +-------------+-------------+
                 |             |             |
                 v             v             v
-             Qdrant         Neo4j          S3
+             ChromaDB       Neo4j          S3
                 |             |             |
                 +-------------+-------------+
                               |
@@ -1891,7 +1962,7 @@ Do not start with:
 ```text
 LangChain
 LangGraph
-Qdrant
+ChromaDB
 Neo4j
 S3
 React
@@ -2179,7 +2250,7 @@ Chunk
  ↓
 Embedding
  ↓
-Qdrant
+ChromaDB
  ↓
 Similarity Search
  ↓
