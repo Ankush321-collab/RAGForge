@@ -105,9 +105,11 @@ openpyxl
 neo4j
 
 # =========================
-# AWS / S3
+# AWS / S3 / OpenSearch
 # =========================
 boto3
+opensearch-py
+
 
 # =========================
 # Evaluation

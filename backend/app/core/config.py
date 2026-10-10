@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 		validation_alias=AliasChoices("S3_ENDPOINT_URL", "AWS_ENDPOINT_URL"),
 	)
 	s3_region: str = Field(
-		default="us-east-1",
+		default="ap-south-2",
 		validation_alias=AliasChoices("S3_REGION", "AWS_DEFAULT_REGION"),
 	)
 	s3_access_key_id: str = Field(
@@ -28,6 +28,23 @@ class Settings(BaseSettings):
 	s3_presigned_url_expiry: int = 900
 	max_upload_size_bytes: int = 50 * 1024 * 1024
 	allowed_upload_extensions: tuple[str, ...] = (".pdf",)
+
+	opensearch_host: str | None = Field(
+		default=None,
+		validation_alias=AliasChoices("OPENSEARCH_HOST", "AWS_OPENSEARCH_ENDPOINT"),
+	)
+	opensearch_username: str | None = Field(
+		default="admin",
+		validation_alias=AliasChoices("OPENSEARCH_USERNAME", "AWS_OPENSEARCH_USER"),
+	)
+	opensearch_password: str | None = Field(
+		default=None,
+		validation_alias=AliasChoices("OPENSEARCH_PASSWORD", "AWS_OPENSEARCH_PASSWORD"),
+	)
+	opensearch_index_name: str = Field(
+		default="ragforge-chunks",
+		validation_alias=AliasChoices("OPENSEARCH_INDEX_NAME", "AWS_OPENSEARCH_INDEX"),
+	)
 
 	model_config = SettingsConfigDict(
 		env_file=".env",
