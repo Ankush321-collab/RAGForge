@@ -141,6 +141,28 @@ class HybridRetriever:
 
         return fused[:top_k]
 
+    def multi_query_search(
+        self,
+        queries: Sequence[str],
+        top_k: int = 5,
+        candidate_k: int = 20,
+        mode: str = "hybrid",
+    ) -> List[Dict[str, Any]]:
+        """Phase 8: Retrieve for multiple queries and fuse results using RRF."""
+        ranked_lists = []
+        for q in queries:
+            hits = self.search(q, top_k=candidate_k, candidate_k=candidate_k, mode=mode)
+            ranked_lists.append(hits)
+
+        if not ranked_lists:
+            return []
+
+        fused = reciprocal_rank_fusion(
+            ranked_lists=ranked_lists,
+            k=self.k_rrf,
+        )
+        return fused[:top_k]
+
     def search_as_documents(
         self,
         query: str,
@@ -156,3 +178,4 @@ class HybridRetriever:
             metadata = {k: v for k, v in hit.items() if k != "text"}
             docs.append(Document(page_content=content, metadata=metadata))
         return docs
+

@@ -4,6 +4,9 @@ import time
 from pathlib import Path
 from dotenv import load_dotenv
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 # Ensure backend package can be imported
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -183,7 +186,7 @@ def run_hard_queries(store: OpenSearchVectorStore, reranker: CrossEncoderReranke
         matches = [kw for kw in expected_keywords if kw.lower() in top_text.lower()]
         accuracy_pct = (len(matches) / len(expected_keywords)) * 100
 
-        print(f"\n  ★ TOP RERANKED ANSWER (Page {page_num}, Score: {top_score:+.4f}, Keyword Coverage: {accuracy_pct:.0f}%):")
+        print(f"\n  [*] TOP RERANKED ANSWER (Page {page_num}, Score: {top_score:+.4f}, Keyword Coverage: {accuracy_pct:.0f}%):")
         print(f"    \"{top_text.strip()[:240]}...\"\n")
 
         print("  Comparison of Top Hit Rankings across Stages:")

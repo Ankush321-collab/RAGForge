@@ -192,14 +192,15 @@ loader -> chunker -> embedding -> vector search -> RAG
 | 2A      | Upload documents to S3                                   | `backend/app/api/documents.py`, `backend/app/storage/s3.py`, `backend/tests/api/test_documents.py` (create)                                                              |
 | 2B      | Generate presigned URLs                                  | `backend/app/storage/s3.py`, `backend/app/api/documents.py`, `backend/tests/storage/test_presigned_urls.py` (create)                                                     |
 | 2C      | CDN and private asset delivery                           | `backend/app/storage/s3.py`, `backend/app/core/security.py` (exists), deployment configuration (create)                                                                  |
-| 3       | Advanced and parent-child chunking                       | `backend/app/ingestion/chunker.py`, `backend/app/retrieval/parent_child.py` (exists), `backend/tests/retrieval/test_parent_child.py` (create)                            |
-| 4       | BM25 sparse retrieval                                    | `backend/app/retrieval/bm25.py` (exists), `backend/tests/retrieval/test_bm25.py` (create)                                                                                |
-| 5       | Hybrid retrieval and RRF fusion                          | `backend/app/retrieval/hybrid.py` (exists), `backend/app/retrieval/bm25.py`, `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hybrid.py` (create)        |
-| 6       | Cross-encoder reranking                                  | `backend/app/retrieval/reranker.py` (exists), `backend/tests/retrieval/test_reranker.py` (create)                                                                        |
-| 7       | Query rewriting                                          | `backend/app/retrieval/query_transform.py` (exists), `backend/tests/retrieval/test_query_transform.py` (create)                                                          |
-| 8       | Query expansion and multi-query fusion                   | `backend/app/retrieval/query_transform.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_query_expansion.py` (create)                                |
-| 9       | HyDE retrieval                                           | `backend/app/retrieval/hyde.py` (exists), `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hyde.py` (create)                                             |
-| 10      | Parent-child context retrieval                           | `backend/app/retrieval/parent_child.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_parent_child.py` (create)                                      |
+| 3       | Advanced and parent-child chunking                       | `backend/app/ingestion/chunker.py`, `backend/app/retrieval/parent_child.py`, `backend/tests/retrieval/test_parent_child.py` (implemented)                               |
+| 4       | BM25 sparse retrieval                                    | `backend/app/retrieval/bm25.py`, `backend/tests/retrieval/test_bm25.py` (implemented)                                                                                     |
+| 5       | Hybrid retrieval and RRF fusion                          | `backend/app/retrieval/hybrid.py`, `backend/app/retrieval/bm25.py`, `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hybrid.py` (implemented)           |
+| 6       | Cross-encoder reranking                                  | `backend/app/retrieval/reranker.py`, `backend/tests/retrieval/test_reranker.py` (implemented)                                                                             |
+| 7       | Query rewriting                                          | `backend/app/retrieval/query_transform.py`, `backend/tests/retrieval/test_query_transform.py` (implemented)                                                               |
+| 8       | Query expansion and multi-query fusion                   | `backend/app/retrieval/query_transform.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_query_expansion.py` (implemented)                                   |
+| 9       | HyDE retrieval                                           | `backend/app/retrieval/hyde.py`, `backend/app/retrieval/vector.py`, `backend/tests/retrieval/test_hyde.py` (implemented)                                                  |
+| 10      | Parent-child context retrieval                           | `backend/app/retrieval/parent_child.py`, `backend/app/retrieval/hybrid.py`, `backend/tests/retrieval/test_parent_child.py` (implemented)                                   |
+
 | 11      | Metadata filtering                                       | `backend/app/retrieval/vector.py`, `backend/app/retrieval/hybrid.py`, `backend/app/api/search.py`, `backend/tests/retrieval/test_metadata_filtering.py` (create)         |
 | 12      | Contextualized chunks                                    | `backend/app/retrieval/contextual.py` (exists), `backend/app/ingestion/chunker.py`, `backend/tests/retrieval/test_contextual.py` (create)                                |
 | 13A     | Extract and store document images                        | `backend/app/multimodal/image_extractor.py` (exists), `backend/app/storage/s3.py`, `backend/tests/multimodal/test_image_extractor.py` (create)                           |
@@ -1017,6 +1018,11 @@ rewritten_query
 
 Do not overwrite the original query.
 
+**Implementation**:
+- Component: `QueryRewriter` and `rewrite_query` in `backend/app/retrieval/query_transform.py`
+- Tests: `backend/tests/retrieval/test_query_transform.py`
+- End-to-end pipeline: `scripts/test_pipeline_phase1_to_10.py`
+
 ---
 
 # 22. PHASE 8 — Query Expansion
@@ -1045,6 +1051,12 @@ Retrieve for each.
 Fuse results.
 
 Compare against single-query retrieval.
+
+**Implementation**:
+- Component: `QueryExpander` and `expand_query` in `backend/app/retrieval/query_transform.py`
+- Fusion: `multi_query_search` in `backend/app/retrieval/query_transform.py` and `HybridRetriever.multi_query_search` in `backend/app/retrieval/hybrid.py`
+- Tests: `backend/tests/retrieval/test_query_expansion.py`
+- End-to-end pipeline: `scripts/test_pipeline_phase1_to_10.py`
 
 ---
 
@@ -1082,6 +1094,11 @@ vs
 Hybrid + HyDE
 ```
 
+**Implementation**:
+- Component: `HyDEGenerator`, `HyDERetriever`, and `hybrid_hyde_search` in `backend/app/retrieval/hyde.py`
+- Tests: `backend/tests/retrieval/test_hyde.py`
+- End-to-end pipeline: `scripts/test_pipeline_phase1_to_10.py`
+
 ---
 
 # 24. PHASE 10 — Parent-Child Retrieval
@@ -1110,6 +1127,12 @@ Example metadata:
 ```
 
 Evaluate whether larger context improves answer quality.
+
+**Implementation**:
+- Component: `ParentChildRetriever` in `backend/app/retrieval/parent_child.py` with `search_and_resolve` and `search_resolve_and_rerank`
+- Chunking: `chunk_parent_child` in `backend/app/ingestion/chunker.py`
+- Tests: `backend/tests/retrieval/test_parent_child.py`
+- End-to-end pipeline: `scripts/test_pipeline_phase1_to_10.py`
 
 ---
 
