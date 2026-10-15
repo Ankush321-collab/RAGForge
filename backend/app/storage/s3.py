@@ -10,6 +10,7 @@ class S3Storage:
     def __init__(self) -> None:
         settings = get_settings()
         self.bucket_name = settings.s3_bucket_name
+        self.region = settings.s3_region
         self.client = boto3.client(
             "s3",
             endpoint_url=settings.s3_endpoint_url,
@@ -26,7 +27,13 @@ class S3Storage:
         try:
             self.client.head_bucket(Bucket=self.bucket_name)
         except ClientError:
-            self.client.create_bucket(Bucket=self.bucket_name) 
+            if self.region and self.region != "us-east-1":
+                self.client.create_bucket(
+                    Bucket=self.bucket_name,
+                    CreateBucketConfiguration={"LocationConstraint": self.region},
+                )
+            else:
+                self.client.create_bucket(Bucket=self.bucket_name) 
             
     def upload_bytes(self, content: bytes, object_key: str, content_type: str) -> None:
         self.client.upload_fileobj(

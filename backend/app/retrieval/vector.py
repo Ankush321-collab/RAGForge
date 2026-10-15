@@ -25,18 +25,25 @@ class SentenceTransformerEmbeddings(Embeddings):
 
 
 def chunks_to_documents(chunks: Iterable[dict]) -> list[Document]:
-    """Convert Phase 1B/1C chunks into LangChain documents."""
-    return [
-        Document(
-            page_content=chunk["text"],
-            metadata={
-                "chunk_id": chunk["chunk_id"],
-                "document_id": chunk.get("document_id"),
-                "page_number": chunk["page_number"],
-            },
-        )
-        for chunk in chunks
-    ]
+    """Convert Phase 1B/1C/10 chunks into LangChain documents."""
+    docs = []
+    for idx, chunk in enumerate(chunks, start=1):
+        chunk_id = chunk.get("chunk_id") or chunk.get("child_id") or chunk.get("id") or str(idx)
+        metadata = {
+            "chunk_id": chunk_id,
+            "document_id": chunk.get("document_id"),
+            "page_number": chunk.get("page_number", 1),
+        }
+        if "parent_id" in chunk:
+            metadata["parent_id"] = chunk["parent_id"]
+        if "strategy" in chunk:
+            metadata["strategy"] = chunk["strategy"]
+        if "original_text" in chunk:
+            metadata["original_text"] = chunk["original_text"]
+        if "context" in chunk:
+            metadata["context"] = chunk["context"]
+        docs.append(Document(page_content=chunk["text"], metadata=metadata))
+    return docs
 
 
 def create_vector_store(
@@ -45,21 +52,32 @@ def create_vector_store(
     persist_directory="data/chroma",
     model_name="sentence-transformers/all-MiniLM-L6-v2",
 ):
-    """Create persistent ChromaDB from precomputed Phase 1C embeddings."""
+    """Create persistent ChromaDB from chunks, computing embeddings if not precomputed."""
     chunks = list(chunks)
     documents = chunks_to_documents(chunks)
-    embeddings = [chunk["embedding"].tolist() for chunk in chunks]
+    
+    if chunks and "embedding" in chunks[0]:
+        embeddings = [
+            chunk["embedding"].tolist() if hasattr(chunk["embedding"], "tolist") else chunk["embedding"]
+            for chunk in chunks
+        ]
+    elif documents:
+        emb_fn = SentenceTransformerEmbeddings(model_name)
+        embeddings = emb_fn.embed_documents([doc.page_content for doc in documents])
+    else:
+        embeddings = []
+
     ids = [
-        f"{chunk.get('document_id', 'document')}-{chunk['chunk_id']}"
-        for chunk in chunks
+        f"{chunk.get('document_id', 'document')}-{chunk.get('chunk_id') or chunk.get('child_id') or idx}"
+        for idx, chunk in enumerate(chunks, start=1)
     ]
 
     vector_store = Chroma(
         collection_name=collection_name,
         embedding_function=SentenceTransformerEmbeddings(model_name),
-        persist_directory=str(Path(persist_directory)),
+        persist_directory=str(Path(persist_directory)) if persist_directory else None,
     )
-    if documents:
+    if documents and embeddings:
         vector_store._collection.upsert(
             ids=ids,
             documents=[document.page_content for document in documents],
@@ -92,6 +110,6 @@ def create_vector_store_from_pdf(
     )
 
 
-def similarity_search(vector_store, query: str, k=5) -> list[Document]:
-    """Return the top-k documents from ChromaDB for a query."""
-    return vector_store.similarity_search(query, k=k)
+def similarity_search(vector_store, query: str, k=5, **kwargs) -> list[Document]:
+    """Return the top-k documents from ChromaDB for a query with optional filtering."""
+    return vector_store.similarity_search(query, k=k, **kwargs)
