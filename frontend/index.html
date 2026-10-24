@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAGForge — Multimodal Agentic RAG Platform</title>
+  <meta name="description" content="Local Multimodal Agentic RAG Platform with MinIO S3, OpenSearch Vector Store, and Neo4j Knowledge Graph">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">RAG<span>Forge</span></h1>
+          <p class="brand-subtitle">Multimodal Agentic RAG Platform</p>
+        </div>
+      </div>
+
+      <!-- Infrastructure Status Bar -->
+      <div class="infra-status-bar">
+        <div class="status-badge" id="badge-backend">
+          <span class="status-dot"></span>
+          <span class="badge-label">Backend (8000)</span>
+        </div>
+        <div class="status-badge" id="badge-minio">
+          <span class="status-dot"></span>
+          <span class="badge-label">MinIO S3 (9000)</span>
+        </div>
+        <div class="status-badge" id="badge-opensearch">
+          <span class="status-dot"></span>
+          <span class="badge-label">OpenSearch (9200)</span>
+        </div>
+        <div class="status-badge" id="badge-neo4j">
+          <span class="status-dot"></span>
+          <span class="badge-label">Neo4j (7474)</span>
+        </div>
+        <button id="btn-refresh-status" class="btn-icon" title="Refresh Health Check">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="tab-chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Agentic Chat
+      </button>
+      <button class="nav-tab" data-tab="tab-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Hybrid Retrieval Explorer
+      </button>
+      <button class="nav-tab" data-tab="tab-documents">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Local S3 Storage (MinIO)
+      </button>
+      <button class="nav-tab" data-tab="tab-system">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        Service Architecture
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- TAB 1: AGENTIC CHAT -->
+      <section id="tab-chat" class="tab-panel active">
+        <div class="chat-layout">
+          <div class="chat-main-card">
+            <div class="chat-header">
+              <div>
+                <h2>Agentic RAG Assistant</h2>
+                <p>Routing queries across Dense Vectors, Sparse BM25, Multimodal Figures, and Knowledge Graphs</p>
+              </div>
+              <div class="llm-model-badge">Ministral-8B / Local Embeddings</div>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-message assistant">
+                <div class="message-avatar">AI</div>
+                <div class="message-content">
+                  <p>Welcome to <strong>RAGForge</strong>! The retrieval pipeline is fully switched to local infrastructure:</p>
+                  <ul>
+                    <li><strong>MinIO</strong> replaces AWS S3 for PDF documents &amp; extracted images.</li>
+                    <li><strong>OpenSearch</strong> replaces AWS OpenSearch Serverless for dense k-NN + sparse BM25 indexing.</li>
+                    <li><strong>Neo4j</strong> provides entity-relation Knowledge Graph traversal.</li>
+                  </ul>
+                  <p>Ask a question about the indexed notes or choose an example query below.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick sample queries -->
+            <div class="quick-queries">
+              <button class="query-chip" data-query="What is runtime polymorphism in C++?">What is runtime polymorphism?</button>
+              <button class="query-chip" data-query="Explain how vtable and dynamic dispatch work.">vtable dynamic dispatch</button>
+              <button class="query-chip" data-query="Explain the architecture diagram in Figure 3.">Visual Diagram Figure 3</button>
+              <button class="query-chip" data-query="Which model achieved the highest score in the table?">Tabular comparison</button>
+            </div>
+
+            <!-- Chat Input -->
+            <form id="chat-form" class="chat-input-bar">
+              <input type="text" id="chat-input" placeholder="Ask a question about your documents..." required autocomplete="off">
+              <button type="submit" id="btn-send-chat" class="btn-primary">
+                <span>Send</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
+          </div>
+
+          <!-- Chat Sidebar: Live Route & Grounding Inspector -->
+          <div class="chat-sidebar">
+            <div class="sidebar-card">
+              <h3>Agentic Routing Decisions</h3>
+              <div id="inspector-route" class="inspector-item">
+                <span class="inspector-label">Active Route:</span>
+                <span class="inspector-value badge-route" id="val-route">—</span>
+              </div>
+              <div id="inspector-grounding" class="inspector-item">
+                <span class="inspector-label">Grounding Score:</span>
+                <div class="grounding-meter">
+                  <div class="meter-bar" id="val-grounding-bar" style="width: 0%"></div>
+                </div>
+                <span class="inspector-value" id="val-grounding-num">—</span>
+              </div>
+              <div class="inspector-item">
+                <span class="inspector-label">Grounding Status:</span>
+                <span class="inspector-value" id="val-grounding-status">—</span>
+              </div>
+            </div>
+
+            <div class="sidebar-card">
+              <h3>Retrieved Citations</h3>
+              <div id="citations-list" class="citations-container">
+                <p class="placeholder-text">Citations will appear here when an answer is retrieved.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: HYBRID SEARCH EXPLORER -->
+      <section id="tab-search" class="tab-panel">
+        <div class="search-layout">
+          <div class="search-control-card">
+            <h2>Hybrid Retrieval Search Bar</h2>
+            <p>Test Reciprocal Rank Fusion (RRF) combining dense vector search and sparse BM25 keyword search.</p>
+            
+            <form id="search-form" class="search-controls-form">
+              <div class="form-row">
+                <input type="text" id="search-query-input" placeholder="Enter search terms (e.g., virtual function, constructor, polymorphism)..." required>
+                <button type="submit" class="btn-primary">Search Index</button>
+              </div>
+
+              <div class="form-options">
+                <label>
+                  <span>Search Mode:</span>
+                  <select id="search-mode-select">
+                    <option value="hybrid" selected>Hybrid (Dense Vector + BM25 Sparse)</option>
+                    <option value="vector_only">Vector Only (SentenceTransformers)</option>
+                    <option value="bm25_only">BM25 Only (Lexical Keyword)</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Top-K Results:</span>
+                  <input type="number" id="search-top-k" min="1" max="20" value="5">
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="search-rerank-check" checked>
+                  <span>Cross-Encoder Reranker</span>
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <div class="search-results-summary" id="search-results-meta" style="display: none;">
+            <span>Found <strong id="meta-hit-count">0</strong> hits</span>
+            <span>Execution Time: <strong id="meta-exec-time">0 ms</strong></span>
+            <span>Retriever: <strong id="meta-mode">hybrid</strong></span>
+          </div>
+
+          <div class="search-hits-grid" id="search-hits-container">
+            <div class="empty-state">
+              <p>Type a query above to execute hybrid search against local vector storage.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LOCAL S3 DOCUMENTS (MINIO) -->
+      <section id="tab-documents" class="tab-panel">
+        <div class="documents-layout">
+          <!-- Upload Area -->
+          <div class="card upload-card">
+            <h2>Upload PDF to Local S3 (MinIO)</h2>
+            <p>Documents are stored in MinIO bucket <code>ragforge</code> and served via presigned URLs.</p>
+            
+            <form id="upload-form" class="upload-dropzone">
+              <input type="file" id="file-input" accept=".pdf" style="display: none;">
+              <div class="dropzone-inner" id="dropzone-box">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Click or drag a <strong>PDF document</strong> here to upload</p>
+                <span class="file-hint">Max file size: 50MB</span>
+                <span id="selected-filename" class="selected-file-label"></span>
+              </div>
+              <button type="submit" id="btn-upload" class="btn-primary" disabled>Upload to Local S3</button>
+            </form>
+
+            <div id="upload-status-alert" class="alert-box" style="display: none;"></div>
+          </div>
+
+          <!-- Document List -->
+          <div class="card doc-list-card">
+            <div class="card-header-flex">
+              <h2>Uploaded Document Store</h2>
+              <span class="badge-accent">S3 Bucket: ragforge</span>
+            </div>
+            <div class="doc-table-container">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Filename</th>
+                    <th>Document ID</th>
+                    <th>Size</th>
+                    <th>Storage</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="documents-table-body">
+                  <tr>
+                    <td><strong>oops_notes.pdf</strong></td>
+                    <td><code>default_oops_corpus</code></td>
+                    <td>248 KB</td>
+                    <td><span class="badge-s3">MinIO / Local</span></td>
+                    <td>
+                      <a href="http://localhost:8000/documents/download/documents/default_oops_corpus/oops_notes.pdf" target="_blank" class="btn-sm">Download</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: SYSTEM ARCHITECTURE & DIAGNOSTICS -->
+      <section id="tab-system" class="tab-panel">
+        <div class="system-layout">
+          <div class="card system-summary-card">
+            <h2>Local Infrastructure Status</h2>
+            <div class="services-grid">
+              <!-- Service 1: MinIO -->
+              <div class="service-box">
+                <div class="service-box-header">
+                  <div class="service-icon minio-color">S3</div>
+                  <div>
+                    <h4>MinIO Object Storage</h4>
+                    <span class="service-port">Port 9000 (API) / 9001 (Console)</span>
+                  </div>
+                </div>
+                <p>High-performance AWS S3-compatible local object storage. Stores raw documents, embedded figures, and assets.</p>
+                <div class="service-actions">
+                  <a href="http://localhost:9001" target="_blank" class="btn-sm">Open MinIO Console</a>
+                  <span class="env-var">User: minioadmin</span>
+                </div>
+              </div>
+
+              <!-- Service 2: OpenSearch -->
+              <div class="service-box">
+                <div class="service-box-header">
+                  <div class="service-icon opensearch-color">OS</div>
+                  <div>
+                    <h4>OpenSearch Vector DB</h4>
+                    <span class="service-port">Port 9200 (k-NN &amp; BM25)</span>
+                  </div>
+                </div>
+                <p>Replaces AWS OpenSearch Serverless. Handles dense 384-dim k-NN vector search and sparse BM25 indexing.</p>
+                <div class="service-actions">
+                  <a href="http://localhost:9200" target="_blank" class="btn-sm">OpenSearch Info</a>
+                  <span class="env-var">Index: ragforge-chunks</span>
+                </div>
+              </div>
+
+              <!-- Service 3: Neo4j -->
+              <div class="service-box">
+                <div class="service-box-header">
+                  <div class="service-icon neo4j-color">N4J</div>
+                  <div>
+                    <h4>Neo4j Knowledge Graph</h4>
+                    <span class="service-port">Port 7474 (Browser) / 7687 (Bolt)</span>
+                  </div>
+                </div>
+                <p>Knowledge graph storage for entity relationships, hierarchical concepts, and multi-hop Graph RAG.</p>
+                <div class="service-actions">
+                  <a href="http://localhost:7474" target="_blank" class="btn-sm">Open Neo4j Browser</a>
+                  <span class="env-var">User: neo4j</span>
+                </div>
+              </div>
+
+              <!-- Service 4: FastAPI Backend -->
+              <div class="service-box">
+                <div class="service-box-header">
+                  <div class="service-icon backend-color">API</div>
+                  <div>
+                    <h4>FastAPI Agentic Backend</h4>
+                    <span class="service-port">Port 8000</span>
+                  </div>
+                </div>
+                <p>Core intelligence service hosting the query router, RAG orchestrator, RRF hybrid retriever, and answer validator.</p>
+                <div class="service-actions">
+                  <a href="http://localhost:8000/docs" target="_blank" class="btn-sm">Swagger OpenAPI Docs</a>
+                  <a href="http://localhost:8000/health" target="_blank" class="btn-sm">/health API</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Test API Console -->
+          <div class="card api-test-card">
+            <h2>Live Health API Response</h2>
+            <pre id="health-json-output">Click "Refresh Health Check" above to test live backend connection...</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

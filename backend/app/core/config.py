@@ -7,6 +7,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
 	app_name: str = "Multimodal Agentic RAG"
 	environment: str = "development"
+	storage_backend: str = Field(
+		default="auto",
+		validation_alias=AliasChoices("STORAGE_BACKEND", "STORAGE_TYPE"),
+	)
+	local_storage_dir: str = Field(
+		default="data/storage",
+		validation_alias=AliasChoices("LOCAL_STORAGE_DIR", "STORAGE_LOCAL_DIR"),
+	)
+	base_url: str = Field(
+		default="http://localhost:8000",
+		validation_alias=AliasChoices("BASE_URL", "APP_BASE_URL"),
+	)
 	s3_endpoint_url: str | None = Field(
 		default=None,
 		validation_alias=AliasChoices("S3_ENDPOINT_URL", "AWS_ENDPOINT_URL"),
@@ -16,9 +28,11 @@ class Settings(BaseSettings):
 		validation_alias=AliasChoices("S3_REGION", "AWS_DEFAULT_REGION"),
 	)
 	s3_access_key_id: str = Field(
+		default="mock_access_key",
 		validation_alias=AliasChoices("S3_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"),
 	)
 	s3_secret_access_key: str = Field(
+		default="mock_secret_key",
 		validation_alias=AliasChoices("S3_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"),
 	)
 	s3_bucket_name: str = Field(
@@ -44,6 +58,19 @@ class Settings(BaseSettings):
 	opensearch_index_name: str = Field(
 		default="ragforge-chunks",
 		validation_alias=AliasChoices("OPENSEARCH_INDEX_NAME", "AWS_OPENSEARCH_INDEX"),
+	)
+
+	neo4j_uri: str | None = Field(
+		default=None,
+		validation_alias=AliasChoices("NEO4J_URI", "NEO4J_URL"),
+	)
+	neo4j_username: str | None = Field(
+		default="neo4j",
+		validation_alias=AliasChoices("NEO4J_USERNAME", "NEO4J_USER"),
+	)
+	neo4j_password: str | None = Field(
+		default=None,
+		validation_alias=AliasChoices("NEO4J_PASSWORD"),
 	)
 
 	model_config = SettingsConfigDict(

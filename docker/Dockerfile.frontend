@@ -1,0 +1,9 @@
+FROM nginx:alpine
+
+# Copy frontend static files into Nginx public webroot
+COPY frontend/ /usr/share/nginx/html/
+
+# Expose HTTP port
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

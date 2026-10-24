@@ -105,20 +105,28 @@ class HybridRetriever:
         top_k: int = 5,
         candidate_k: int = 20,
         mode: str = "hybrid",
+        filter: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
-        """Retrieve documents using 'hybrid', 'vector_only', or 'bm25_only'."""
+        """Retrieve documents using 'hybrid', 'vector_only', or 'bm25_only' with metadata filtering."""
         mode = mode.lower()
 
         if mode == "bm25_only":
             if not self.bm25_retriever:
                 return []
-            return self.bm25_retriever.search(query, top_k=top_k)
+            return self.bm25_retriever.search(query, top_k=top_k, filter=filter)
 
         if mode == "vector_only":
             if not self.vector_store:
                 return []
-            vector_docs = similarity_search(self.vector_store, query, k=top_k)
-            return [doc_to_dict(d) for d in vector_docs]
+            try:
+                vector_docs = similarity_search(self.vector_store, query, k=top_k, filter=filter)
+            except Exception:
+                vector_docs = similarity_search(self.vector_store, query, k=top_k)
+            hits = [doc_to_dict(d) for d in vector_docs]
+            if filter:
+                from .bm25 import matches_metadata_filter
+                hits = [h for h in hits if matches_metadata_filter(h, filter)]
+            return hits[:top_k]
 
         if mode != "hybrid":
             raise ValueError(f"Unknown retrieval mode: '{mode}'. Choose 'hybrid', 'vector_only', or 'bm25_only'.")
@@ -126,12 +134,18 @@ class HybridRetriever:
         # Hybrid: retrieve candidates from both systems
         bm25_hits: List[Dict[str, Any]] = []
         if self.bm25_retriever:
-            bm25_hits = self.bm25_retriever.search(query, top_k=candidate_k)
+            bm25_hits = self.bm25_retriever.search(query, top_k=candidate_k, filter=filter)
 
         vector_hits: List[Dict[str, Any]] = []
         if self.vector_store:
-            vector_docs = similarity_search(self.vector_store, query, k=candidate_k)
+            try:
+                vector_docs = similarity_search(self.vector_store, query, k=candidate_k, filter=filter)
+            except Exception:
+                vector_docs = similarity_search(self.vector_store, query, k=candidate_k)
             vector_hits = [doc_to_dict(d) for d in vector_docs]
+            if filter:
+                from .bm25 import matches_metadata_filter
+                vector_hits = [h for h in vector_hits if matches_metadata_filter(h, filter)]
 
         fused = reciprocal_rank_fusion(
             ranked_lists=[bm25_hits, vector_hits],

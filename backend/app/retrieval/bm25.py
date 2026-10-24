@@ -12,13 +12,43 @@ def default_tokenizer(text: str) -> List[str]:
     """
     if not text:
         return []
-    # Match words, numbers, and hyphenated/dotted technical terms
     tokens = re.findall(r"\b[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*\b", text.lower())
     return tokens if tokens else text.lower().split()
 
 
+def matches_metadata_filter(doc: Dict[str, Any], metadata_filter: Optional[Dict[str, Any]]) -> bool:
+    """Evaluate whether document metadata satisfies key-value and operator filter constraints."""
+    if not metadata_filter:
+        return True
+
+    for key, condition in metadata_filter.items():
+        doc_val = doc.get(key)
+        if isinstance(condition, dict):
+            for op, target in condition.items():
+                if op == "$eq" and doc_val != target:
+                    return False
+                elif op == "$ne" and doc_val == target:
+                    return False
+                elif op == "$gt" and (doc_val is None or doc_val <= target):
+                    return False
+                elif op == "$gte" and (doc_val is None or doc_val < target):
+                    return False
+                elif op == "$lt" and (doc_val is None or doc_val >= target):
+                    return False
+                elif op == "$lte" and (doc_val is None or doc_val > target):
+                    return False
+                elif op == "$in" and doc_val not in target:
+                    return False
+                elif op == "$nin" and doc_val in target:
+                    return False
+        else:
+            if doc_val != condition:
+                return False
+    return True
+
+
 class BM25Retriever:
-    """In-memory BM25 sparse retriever using BM25Okapi with Lucene-smoothed IDF."""
+    """In-memory BM25 sparse retriever using BM25Okapi with Lucene-smoothed IDF and metadata filtering."""
 
     def __init__(
         self,
@@ -58,9 +88,6 @@ class BM25Retriever:
         ]
         if tokenized_corpus:
             self.bm25 = BM25Okapi(tokenized_corpus, k1=self.k1, b=self.b)
-            # Apply Lucene / OpenSearch standard positive IDF to prevent 0/negative
-            # scores on small or common keyword subsets:
-            # IDF(t) = ln(1 + (N - n + 0.5) / (n + 0.5))
             num_docs = len(tokenized_corpus)
             nd: Dict[str, int] = {}
             for doc_tokens in tokenized_corpus:
@@ -72,11 +99,10 @@ class BM25Retriever:
         else:
             self.bm25 = None
 
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """Retrieve top_k documents with BM25 score.
-        
-        Returns hits ordered by score descending. Documents with score <= 0 are excluded.
-        """
+    def search(
+        self, query: str, top_k: int = 5, filter: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """Retrieve top_k documents with BM25 score with optional metadata filtering."""
         if not self.bm25 or not self.documents:
             return []
 
@@ -85,13 +111,13 @@ class BM25Retriever:
             return []
 
         scores = self.bm25.get_scores(query_tokens)
-        
-        # Pair documents with their scores and original indices
+
         scored_indices = [
-            (idx, score) for idx, score in enumerate(scores) if score > 0
+            (idx, score)
+            for idx, score in enumerate(scores)
+            if score > 0 and (filter is None or matches_metadata_filter(self.documents[idx], filter))
         ]
-        
-        # Sort by score descending
+
         scored_indices.sort(key=lambda x: x[1], reverse=True)
 
         results = []
@@ -102,9 +128,11 @@ class BM25Retriever:
 
         return results
 
-    def search_as_documents(self, query: str, top_k: int = 5) -> List[Document]:
+    def search_as_documents(
+        self, query: str, top_k: int = 5, filter: Optional[Dict[str, Any]] = None
+    ) -> List[Document]:
         """Retrieve top_k matches converted into LangChain Document objects."""
-        hits = self.search(query, top_k=top_k)
+        hits = self.search(query, top_k=top_k, filter=filter)
         docs = []
         for hit in hits:
             content = hit.get("text", "")

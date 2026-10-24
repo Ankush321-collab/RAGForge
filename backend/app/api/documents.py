@@ -1,6 +1,5 @@
 from uuid import uuid4
-
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, HTTPException, Response, UploadFile, status
 from pydantic import BaseModel
 
 from backend.app.core.config import get_settings
@@ -56,3 +55,37 @@ def get_document_url(document_id: str) -> PresignedUrlResponse:
 		url=storage.generate_presigned_url(object_key, expiry),
 		expires_in=expiry,
 	)
+
+
+@router.get("/download/{object_key:path}")
+def download_document(object_key: str) -> Response:
+	try:
+		content = storage.download_bytes(object_key)
+		media_type = "application/pdf" if object_key.endswith(".pdf") else "application/octet-stream"
+		if object_key.endswith(".png"):
+			media_type = "image/png"
+		elif object_key.endswith(".jpg") or object_key.endswith(".jpeg"):
+			media_type = "image/jpeg"
+		return Response(content=content, media_type=media_type)
+	except FileNotFoundError:
+		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Object not found")
+
+
+@router.get("", response_model=list[DocumentUploadResponse])
+def list_documents() -> list[DocumentUploadResponse]:
+	docs = []
+	doc_dir = storage.local_dir / "documents"
+	if doc_dir.exists():
+		for d_id_dir in doc_dir.iterdir():
+			if d_id_dir.is_dir():
+				for f in d_id_dir.iterdir():
+					if f.is_file():
+						obj_key = f"documents/{d_id_dir.name}/{f.name}"
+						docs.append(DocumentUploadResponse(
+							document_id=d_id_dir.name,
+							object_key=obj_key,
+							filename=f.name,
+							content_type="application/pdf" if f.name.endswith(".pdf") else "application/octet-stream",
+							size_bytes=f.stat().st_size,
+						))
+	return docs

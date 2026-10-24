@@ -1,1 +1,109 @@
+services:
+  # 1. Local S3 Storage (MinIO)
+  minio:
+    image: minio/minio:latest
+    container_name: ragforge-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # Helper service to ensure 'ragforge' bucket is automatically created
+  minio-init:
+    image: minio/mc:latest
+    container_name: ragforge-minio-init
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: >
+      /bin/sh -c "
+      until /usr/bin/mc alias set localminio http://minio:9000 minioadmin minioadminpassword; do echo 'Waiting for MinIO...'; sleep 1; done;
+      /usr/bin/mc mb localminio/ragforge || true;
+      exit 0;
+      "
+
+  # 2. Local OpenSearch Vector & BM25 Store
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    container_name: ragforge-opensearch
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
+  # 3. Local Knowledge Graph (Neo4j)
+  neo4j:
+    image: neo4j:5.15.0
+    container_name: ragforge-neo4j
+    restart: unless-stopped
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/password123
+    volumes:
+      - neo4j_data:/data
+
+  # 4. FastAPI Agentic Backend Service
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: ragforge-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - STORAGE_BACKEND=s3
+      - S3_ENDPOINT_URL=http://minio:9000
+      - S3_REGION=us-east-1
+      - S3_ACCESS_KEY_ID=minioadmin
+      - S3_SECRET_ACCESS_KEY=minioadminpassword
+      - S3_BUCKET_NAME=ragforge
+      - OPENSEARCH_HOST=http://opensearch:9200
+      - OPENSEARCH_USERNAME=admin
+      - OPENSEARCH_PASSWORD=admin
+      - OPENSEARCH_INDEX_NAME=ragforge-chunks
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=password123
+    depends_on:
+      - minio
+      - opensearch
+      - neo4j
+    volumes:
+      - ./data:/app/data
+
+  # 5. Frontend Web Dashboard
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: ragforge-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  minio_data:
+  opensearch_data:
+  neo4j_data:

@@ -19,6 +19,7 @@ htmlcov/
 
 # Local model and vector-store data
 data/chroma/
+data/storage/
 data/embeddings/
 data/indexes/
 .cache/

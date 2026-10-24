@@ -35,7 +35,8 @@ def get_opensearch_client(host: str, username: str | None = None, password: str 
         hosts=[{"host": hostname, "port": port}],
         http_auth=auth,
         use_ssl=use_ssl,
-        verify_certs=True,
+        verify_certs=use_ssl,
+        ssl_show_warn=False,
         connection_class=RequestsHttpConnection,
     )
 

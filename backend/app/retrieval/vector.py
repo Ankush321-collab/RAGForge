@@ -25,23 +25,17 @@ class SentenceTransformerEmbeddings(Embeddings):
 
 
 def chunks_to_documents(chunks: Iterable[dict]) -> list[Document]:
-    """Convert Phase 1B/1C/10 chunks into LangChain documents."""
+    """Convert Phase 1B/1C/10/11 chunks into LangChain documents retaining all metadata."""
     docs = []
+    reserved_keys = {"text", "embedding"}
     for idx, chunk in enumerate(chunks, start=1):
         chunk_id = chunk.get("chunk_id") or chunk.get("child_id") or chunk.get("id") or str(idx)
         metadata = {
-            "chunk_id": chunk_id,
-            "document_id": chunk.get("document_id"),
-            "page_number": chunk.get("page_number", 1),
+            k: v for k, v in chunk.items()
+            if k not in reserved_keys and v is not None and isinstance(v, (str, int, float, bool))
         }
-        if "parent_id" in chunk:
-            metadata["parent_id"] = chunk["parent_id"]
-        if "strategy" in chunk:
-            metadata["strategy"] = chunk["strategy"]
-        if "original_text" in chunk:
-            metadata["original_text"] = chunk["original_text"]
-        if "context" in chunk:
-            metadata["context"] = chunk["context"]
+        metadata.setdefault("chunk_id", chunk_id)
+        metadata.setdefault("page_number", 1)
         docs.append(Document(page_content=chunk["text"], metadata=metadata))
     return docs
 
@@ -110,6 +104,22 @@ def create_vector_store_from_pdf(
     )
 
 
+def get_vector_store(
+    collection_name="ragforge_chunks",
+    persist_directory="data/chroma",
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+):
+    """Return persistent or in-memory Chroma vector store."""
+    p = Path(persist_directory) if persist_directory else None
+    return Chroma(
+        collection_name=collection_name,
+        embedding_function=SentenceTransformerEmbeddings(model_name),
+        persist_directory=str(p) if p else None,
+    )
+
+
 def similarity_search(vector_store, query: str, k=5, **kwargs) -> list[Document]:
     """Return the top-k documents from ChromaDB for a query with optional filtering."""
+    if vector_store is None:
+        return []
     return vector_store.similarity_search(query, k=k, **kwargs)

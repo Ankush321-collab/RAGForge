@@ -109,6 +109,7 @@ neo4j
 # =========================
 boto3
 opensearch-py
+requests-aws4auth
 
 
 # =========================
