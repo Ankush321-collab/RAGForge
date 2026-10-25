@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAGForge — Presentation Slides (Clean White UI)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #f1f5f9;
+      --bg-slide: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-card: #ffffff;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      
+      --text-heading: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --indigo-600: #4f46e5;
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+      --emerald-100: #d1fae5;
+
+      --blue-600: #2563eb;
+      --blue-50: #eff6ff;
+
+      --purple-600: #7c3aed;
+      --purple-50: #f5f3ff;
+
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-canvas);
+      color: var(--text-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    /* Top Control Bar */
+    .controls-bar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      padding: 0.85rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .slide-tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg-subtle);
+      padding: 0.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-btn {
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-heading);
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: var(--indigo-600);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .action-btn {
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 1.1rem;
+      background: var(--indigo-600);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+      transition: background 0.15s ease;
+    }
+
+    .action-btn:hover {
+      background: #4338ca;
+    }
+
+    /* 16:9 Slide Canvas */
+    .slide-stage {
+      width: 1200px;
+      height: 675px; /* Perfect 16:9 aspect ratio */
+      background: var(--bg-slide);
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      position: relative;
+      display: none;
+      flex-direction: column;
+    }
+
+    .slide-stage.active {
+      display: flex;
+    }
+
+    /* Slide Header */
+    .slide-header {
+      padding: 1.25rem 2rem 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #ffffff;
+    }
+
+    .slide-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .slide-number-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--indigo-600);
+      background: var(--indigo-50);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--indigo-100);
+    }
+
+    .slide-heading {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.02em;
+    }
+
+    .slide-subheading {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .slide-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .infra-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-subtle);
+      color: var(--text-body);
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .dot-green {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald-600);
+    }
+
+    /* Slide Body Container */
+    .slide-body {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      background: var(--bg-subtle);
+      overflow: hidden;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    /* ========================================================
+       SLIDE 3: AGENTIC CHAT & CITATIONS DASHBOARD (CLEAN WHITE)
+       ======================================================== */
+    .chat-container {
+      flex: 1.6;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-routing-bar {
+      padding: 0.75rem 1.25rem;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .route-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .route-tag {
+      background: var(--indigo-50);
+      color: var(--indigo-600);
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid var(--indigo-100);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .chat-stream {
+      flex: 1;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .user-bubble {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+      color: #ffffff !important;
+      padding: 0.85rem 1.25rem;
+      border-radius: 14px 14px 3px 14px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      max-width: 80%;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+    }
+
+    .user-bubble * {
+      color: #ffffff !important;
+    }
+
+    .ai-response-box {
+      align-self: flex-start;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px 12px 12px 2px;
+      padding: 1.1rem 1.25rem;
+      max-width: 95%;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ai-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .ai-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
+
+    .ai-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .ai-text {
+      font-size: 0.88rem;
+      color: var(--text-body);
+      line-height: 1.5;
+      margin-bottom: 0.85rem;
+    }
+
+    .citations-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border-subtle);
+    }
+
+    .citation-card {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: var(--text-heading);
+      font-weight: 600;
+    }
+
+    .citation-badge {
+      background: var(--blue-50);
+      color: var(--blue-600);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    /* Right Sidebar for Slide 3 */
+    .meta-sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.15rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .score-hero {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .score-big {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--emerald-600);
+      line-height: 1;
+    }
+
+    .score-meta {
+      font-size: 0.8rem;
+      color: var(--text-body);
+      line-height: 1.35;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 4px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #f8fafc;
+    }
+
+    .metric-label {
+      color: var(--text-muted);
+    }
+
+    .metric-val {
+      font-weight: 600;
+      color: var(--text-heading);
+      font-family: var(--font-mono);
+    }
+
+    .preview-box {
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.75rem;
+      background: #fafafa;
+      font-size: 0.78rem;
+      color: var(--text-body);
+      line-height: 1.45;
+    }
+
+    .preview-box code {
+      font-family: var(--font-mono);
+      background: #e2e8f0;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    /* ========================================================
+       SLIDE 4: HYBRID RETRIEVAL & RERANKER EXPLORER
+       ======================================================== */
+    .search-mockup-header {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .search-bar-mock {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      flex: 1;
+      max-width: 600px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-heading);
+    }
+
+    .search-bar-mock svg {
+      color: var(--text-muted);
+    }
+
+    .search-toggles {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .toggle-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-body);
+    }
+
+    .switch-pill {
+      background: var(--emerald-600);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .hits-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+    }
+
+    .hit-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .hit-rank {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--indigo-600);
+      background: var(--indigo-50);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hit-content {
+      flex: 1;
+    }
+
+    .hit-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .hit-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .hit-badge-doc {
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .hit-text {
+      font-size: 0.82rem;
+      color: var(--text-body);
+      line-height: 1.45;
+    }
+
+    .hit-scores-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 240px;
+      background: var(--bg-subtle);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .score-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+    }
+
+    .score-title {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .score-digit {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .rerank-highlight {
+      color: var(--indigo-600);
+      font-weight: 800;
+    }
+
+    /* ========================================================
+       SLIDE 5: ABLATION BENCHMARKS & METRICS TABLE
+       ======================================================== */
+    .benchmark-layout {
+      width: 100%;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .table-container-slide {
+      flex: 1.5;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-slide-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sub-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--indigo-600);
+      background: var(--indigo-50);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .ablation-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .ablation-table th {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--border-subtle);
+    }
+
+    .ablation-table td {
+      padding: 0.75rem 0.85rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-body);
+      font-weight: 500;
+    }
+
+    .ablation-table tr.highlight-row {
+      background: #f0fdf4;
+    }
+
+    .ablation-table tr.highlight-row td {
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .metric-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.82rem;
+    }
+
+    .badge-gain {
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.35rem;
+    }
+
+    .insights-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chart-box {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.15rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bar-chart-row {
+      margin-bottom: 0.75rem;
+    }
+
+    .bar-chart-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-body);
+      margin-bottom: 0.3rem;
+    }
+
+    .bar-track {
+      height: 9px;
+      background: #f1f5f9;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 5px;
+    }
+
+    .insight-card {
+      background: #ffffff;
+      border-left: 4px solid var(--indigo-600);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--indigo-600);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      box-shadow: var(--shadow-sm);
+      font-size: 0.8rem;
+      color: var(--text-body);
+      line-height: 1.45;
+    }
+
+    .insight-card strong {
+      color: var(--text-heading);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    /* ========================================================
+       SLIDE 6: KNOWLEDGE GRAPH RAG (NEO4J) SUBGRAPH
+       ======================================================== */
+    .graph-layout {
+      width: 100%;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .graph-viz-container {
+      flex: 1.5;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .graph-canvas {
+      flex: 1;
+      width: 100%;
+      background: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+      background-size: 20px 20px;
+      background-color: #fafafa;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .graph-side-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .code-block {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      overflow-x: auto;
+    }
+
+    .code-block .keyword { color: #38bdf8; font-weight: 600; }
+    .code-block .rel { color: #f472b6; }
+    .code-block .node { color: #a7f3d0; }
+
+    /* SVG nodes styling */
+    .node-circle {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .node-circle:hover {
+      transform: scale(1.08);
+    }
+
+    /* Footer for all slides */
+    .slide-footer {
+      padding: 0.75rem 2rem;
+      background: #ffffff;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .footer-right {
+      font-family: var(--font-mono);
+      color: var(--text-light);
+    }
+
+    /* Print / High-Res Export */
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .controls-bar {
+        display: none !important;
+      }
+      .slide-stage {
+        display: flex !important;
+        page-break-after: always;
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar">
+    <div class="brand-section">
+      <div class="brand-badge">RAGForge</div>
+      <div>
+        <div class="brand-title">Multimodal Agentic RAG Platform</div>
+        <div class="brand-subtitle">Professional Presentation Suite &amp; Carousel Assets</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="slide-tabs">
+      <button class="tab-btn active" onclick="switchSlide(3)">
+        <span>Slide 3:</span> Agentic Chat UI
+      </button>
+      <button class="tab-btn" onclick="switchSlide(4)">
+        <span>Slide 4:</span> Hybrid Retrieval
+      </button>
+      <button class="tab-btn" onclick="switchSlide(5)">
+        <span>Slide 5:</span> Ablation Benchmarks
+      </button>
+      <button class="tab-btn" onclick="switchSlide(6)">
+        <span>Slide 6:</span> Knowledge Graph
+      </button>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="action-btn" onclick="window.print()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save All to PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIDE 3: AGENTIC CHAT & CITATIONS DASHBOARD
+       ======================================================== -->
+  <div id="slide-3" class="slide-stage active">
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <span class="slide-number-pill">SLIDE 03 / UI DASHBOARD</span>
+        <div>
+          <h2 class="slide-heading">Agentic Query Execution &amp; Grounding Guardrails</h2>
+          <p class="slide-subheading">Intelligent routing, multimodal figure resolution, and verified citation attribution</p>
+        </div>
+      </div>
+      <div class="slide-badges">
+        <div class="infra-pill"><span class="dot-green"></span> MinIO S3 (9000)</div>
+        <div class="infra-pill"><span class="dot-green"></span> OpenSearch (9200)</div>
+        <div class="infra-pill"><span class="dot-green"></span> Neo4j Graph (7474)</div>
+        <div class="infra-pill"><span class="dot-green"></span> FastAPI Gateway (8000)</div>
+      </div>
+    </div>
+
+    <div class="slide-body">
+      <!-- Main Chat UI Area -->
+      <div class="chat-container">
+        <div class="chat-routing-bar">
+          <div class="route-indicator">
+            <span style="font-weight: 600; color: var(--text-muted);">Agent Router:</span>
+            <span class="route-tag">ROUTE: MULTIMODAL_IMAGE_TEXT</span>
+            <span style="color: var(--text-light);">•</span>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">LangGraph State Machine</span>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+            Latency: <strong>48ms</strong> | Top-K: <strong>5</strong>
+          </div>
+        </div>
+
+        <div class="chat-stream">
+          <!-- User Question -->
+          <div class="user-bubble">
+            "According to Figure 4 and the performance summary, how does the caching strategy impact latency and throughput?"
+          </div>
+
+          <!-- AI Response -->
+          <div class="ai-response-box">
+            <div class="ai-header">
+              <div class="ai-avatar">AI</div>
+              <span class="ai-name">RAGForge Assistant</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted); margin-left: auto;">Model: Ministral-8B + SentenceTransformers</span>
+            </div>
+            <div class="ai-text">
+              Based on the extracted <strong>Figure 4 (Architecture Benchmark)</strong> and <strong>Section 3.2</strong>, the hybrid caching tier yields two primary improvements:
+              <br><br>
+              1. <strong>Latency Reduction:</strong> P99 latency drops from <strong>142ms to 28ms</strong> when Parent-Child context resolver serves cached chunk references.
+              <br>
+              2. <strong>Throughput Scalability:</strong> Dual-tier caching handles up to <strong>3,400 QPS</strong> without saturating OpenSearch vector search pools.
+            </div>
+
+            <!-- Grounded Citations -->
+            <div class="citations-strip">
+              <div class="citation-card">
+                <span class="citation-badge">FIG 4</span>
+                <span>doc_oops_notes.pdf (Page 14)</span>
+              </div>
+              <div class="citation-card">
+                <span class="citation-badge">SEC 3.2</span>
+                <span>system_benchmarks.pdf (Page 8)</span>
+              </div>
+              <div class="citation-card">
+                <span class="citation-badge">TAB 2</span>
+                <span>latency_breakdown.csv</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Meta Inspection Sidebar -->
+      <div class="meta-sidebar">
+        <!-- Verification Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>Grounding Guardrail</span>
+            <span style="color: var(--emerald-600); font-size: 0.72rem; font-weight: 700;">VERIFIED FACTUAL</span>
+          </div>
+          <div class="score-hero">
+            <div class="score-big">98.6%</div>
+            <div class="score-meta">
+              <strong>Grounding Confidence</strong><br>
+              Zero unverified hallucination detected in output text.
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 98.6%;"></div>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Parent Chunks Resolved</span>
+            <span class="metric-val">3 chunks (3,600 tokens)</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Extracted Figures Retrieved</span>
+            <span class="metric-val">1 diagram (CLIP similarity: 0.89)</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Citation Faithfulness</span>
+            <span class="metric-val">1.00 (Perfect Match)</span>
+          </div>
+        </div>
+
+        <!-- Retrieved Context Preview -->
+        <div class="card" style="flex: 1;">
+          <div class="card-title">Parent Context Preview</div>
+          <div class="preview-box">
+            <strong>Parent Chunk #14 (Page 14):</strong><br>
+            "Figure 4 demonstrates the latency-throughput curve under synthetic load. While direct vector lookups scale linearly, introducing parent-child resolution reduces vector dimension overhead..."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div class="footer-left">
+        <span>RAGForge Architecture Suite</span>
+        <span>•</span>
+        <span style="color: var(--indigo-600);">Clean White UI Dashboard</span>
+      </div>
+      <div class="footer-right">Slide 3 of 6 — System UI &amp; Guardrails</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIDE 4: HYBRID RETRIEVAL & RERANKER EXPLORER
+       ======================================================== -->
+  <div id="slide-4" class="slide-stage">
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <span class="slide-number-pill">SLIDE 04 / RETRIEVAL ENGINE</span>
+        <div>
+          <h2 class="slide-heading">Hybrid Retrieval &amp; Cross-Encoder Reranker</h2>
+          <p class="slide-subheading">Dense vector similarity + Sparse BM25 lexical matching fused with Reciprocal Rank Fusion (RRF)</p>
+        </div>
+      </div>
+      <div class="slide-badges">
+        <div class="infra-pill">RRF Fusion: <strong>k = 60</strong></div>
+        <div class="infra-pill">Embeddings: <strong>SentenceTransformers (384-d)</strong></div>
+      </div>
+    </div>
+
+    <div class="slide-body" style="flex-direction: column;">
+      <!-- Search Header Mockup -->
+      <div class="search-mockup-header">
+        <div class="search-bar-mock">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Dynamic dispatch vtable resolution runtime polymorphism C++</span>
+        </div>
+        <div class="search-toggles">
+          <div class="toggle-badge">
+            <span>Retriever:</span>
+            <span style="color: var(--indigo-600); font-weight: 700;">Hybrid (Dense + BM25)</span>
+          </div>
+          <div class="toggle-badge">
+            <span>Cross-Encoder:</span>
+            <span class="switch-pill">ENABLED</span>
+          </div>
+          <div class="toggle-badge">
+            <span>Query Transformation:</span>
+            <span style="font-weight: 700; color: var(--emerald-600);">HyDE Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hits Stack -->
+      <div class="hits-stack">
+        <!-- Hit 1 -->
+        <div class="hit-card">
+          <div class="hit-rank">1</div>
+          <div class="hit-content">
+            <div class="hit-title-row">
+              <span class="hit-title">Virtual Function Resolution &amp; Vtable Mechanism</span>
+              <span class="hit-badge-doc">oops_notes.pdf • Page 7 • Chunk #14</span>
+            </div>
+            <div class="hit-text">
+              In C++, dynamic dispatch relies on a virtual method table (<strong>vtable</strong>) created per class. Each instantiated object with virtual members contains a hidden <strong>vptr</strong> pointing to this table. At runtime, calls are dispatched via offset indexing rather than compile-time direct addressing.
+            </div>
+          </div>
+          <div class="hit-scores-box">
+            <div class="score-item">
+              <span class="score-title">Cross-Encoder Score:</span>
+              <span class="score-digit rerank-highlight">+9.42 (High Relevance)</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">RRF Combined Score:</span>
+              <span class="score-digit">0.0328</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Dense Cosine Sim:</span>
+              <span class="score-digit">0.894 (Rank #1)</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Sparse BM25 Score:</span>
+              <span class="score-digit">18.42 (Rank #1)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hit 2 -->
+        <div class="hit-card">
+          <div class="hit-rank">2</div>
+          <div class="hit-content">
+            <div class="hit-title-row">
+              <span class="hit-title">Pure Virtual Functions &amp; Abstract Class Contracts</span>
+              <span class="hit-badge-doc">oops_notes.pdf • Page 8 • Chunk #16</span>
+            </div>
+            <div class="hit-text">
+              An abstract class defines an interface by declaring at least one <strong>pure virtual function</strong> (= 0). Derived concrete subclasses must provide implementations; failure to do so results in compilation errors. The vtable entry is populated with the derived method override.
+            </div>
+          </div>
+          <div class="hit-scores-box">
+            <div class="score-item">
+              <span class="score-title">Cross-Encoder Score:</span>
+              <span class="score-digit rerank-highlight">+7.85</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">RRF Combined Score:</span>
+              <span class="score-digit">0.0291</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Dense Cosine Sim:</span>
+              <span class="score-digit">0.812 (Rank #3)</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Sparse BM25 Score:</span>
+              <span class="score-digit">14.19 (Rank #2)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hit 3 -->
+        <div class="hit-card">
+          <div class="hit-rank">3</div>
+          <div class="hit-content">
+            <div class="hit-title-row">
+              <span class="hit-title">Runtime Performance Overhead of Virtual Dispatch</span>
+              <span class="hit-badge-doc">oops_notes.pdf • Page 10 • Chunk #21</span>
+            </div>
+            <div class="hit-text">
+              Virtual function overhead arises from cache misses when dereferencing the <strong>vptr</strong> and indirect branch prediction latency. Modern compilers optimize this with devirtualization when static type proofs exist.
+            </div>
+          </div>
+          <div class="hit-scores-box">
+            <div class="score-item">
+              <span class="score-title">Cross-Encoder Score:</span>
+              <span class="score-digit rerank-highlight">+6.18</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">RRF Combined Score:</span>
+              <span class="score-digit">0.0245</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Dense Cosine Sim:</span>
+              <span class="score-digit">0.765 (Rank #2)</span>
+            </div>
+            <div class="score-item">
+              <span class="score-title">Sparse BM25 Score:</span>
+              <span class="score-digit">9.80 (Rank #5)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div class="footer-left">
+        <span>RAGForge Architecture Suite</span>
+        <span>•</span>
+        <span style="color: var(--indigo-600);">Hybrid Fusion Mechanics</span>
+      </div>
+      <div class="footer-right">Slide 4 of 6 — Precision Retrieval</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIDE 5: ABLATION BENCHMARKS & EVALUATION METRICS
+       ======================================================== -->
+  <div id="slide-5" class="slide-stage">
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <span class="slide-number-pill">SLIDE 05 / EMPIRICAL BENCHMARKS</span>
+        <div>
+          <h2 class="slide-heading">Ablation Study: Quantifying Every Retrieval Layer</h2>
+          <p class="slide-subheading">Benchmarked on 150 technical queries across complex documentation (Recall@5, MRR, NDCG@5)</p>
+        </div>
+      </div>
+      <div class="slide-badges">
+        <div class="infra-pill">Benchmark Corpus: <strong>Operating Systems Architecture (os_notes.pdf)</strong></div>
+      </div>
+    </div>
+
+    <div class="slide-body">
+      <div class="benchmark-layout">
+        <!-- Left Ablation Table -->
+        <div class="table-container-slide">
+          <div class="table-slide-title">
+            <span>Ablation Matrix Comparison</span>
+            <span class="sub-tag">5 Evaluated Strategies</span>
+          </div>
+
+          <table class="ablation-table">
+            <thead>
+              <tr>
+                <th>Retrieval Strategy</th>
+                <th>Recall@5</th>
+                <th>MRR</th>
+                <th>NDCG@5</th>
+                <th>Improvement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. BM25 Sparse Alone</strong><br><span style="font-size: 0.72rem; color: var(--text-muted);">Exact lexical keyword matching</span></td>
+                <td><span class="metric-badge">0.7420</span></td>
+                <td><span class="metric-badge">0.5340</span></td>
+                <td><span class="metric-badge">0.6380</span></td>
+                <td><span style="color: var(--text-muted); font-size: 0.75rem;">Baseline</span></td>
+              </tr>
+              <tr>
+                <td><strong>2. Dense Vector (ChromaDB)</strong><br><span style="font-size: 0.72rem; color: var(--text-muted);">Cosine semantic similarity (MiniLM)</span></td>
+                <td><span class="metric-badge">0.7950</span></td>
+                <td><span class="metric-badge">0.5980</span></td>
+                <td><span class="metric-badge">0.7040</span></td>
+                <td><span class="badge-gain">+7.1%</span></td>
+              </tr>
+              <tr>
+                <td><strong>3. Hybrid (Dense + BM25)</strong><br><span style="font-size: 0.72rem; color: var(--text-muted);">Reciprocal Rank Fusion (k=60)</span></td>
+                <td><span class="metric-badge">0.8920</span></td>
+                <td><span class="metric-badge">0.7120</span></td>
+                <td><span class="metric-badge">0.7960</span></td>
+                <td><span class="badge-gain">+20.2%</span></td>
+              </tr>
+              <tr>
+                <td><strong>4. Hybrid + Reranker</strong><br><span style="font-size: 0.72rem; color: var(--text-muted);">Cross-Encoder deep scoring</span></td>
+                <td><span class="metric-badge">0.9540</span></td>
+                <td><span class="metric-badge">0.8250</span></td>
+                <td><span class="metric-badge">0.8840</span></td>
+                <td><span class="badge-gain">+28.6%</span></td>
+              </tr>
+              <tr class="highlight-row">
+                <td><strong>5. Full Multimodal Pipeline</strong><br><span style="font-size: 0.72rem; color: #047857;">Parent-Child + Context + Routing</span></td>
+                <td><span class="metric-badge" style="color: #047857;">0.9820</span></td>
+                <td><span class="metric-badge" style="color: #047857;">0.8960</span></td>
+                <td><span class="metric-badge" style="color: #047857;">0.9380</span></td>
+                <td><span class="badge-gain" style="background: #15803d; color: white;">+32.3% GAIN</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right Insights & Visual Bar Chart -->
+        <div class="insights-panel">
+          <!-- Visual Bar Chart Card -->
+          <div class="chart-box">
+            <div class="table-slide-title" style="margin-bottom: 0.75rem;">
+              <span>Recall@5 Progression</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">Scale 0.0 – 1.0</span>
+            </div>
+
+            <div class="bar-chart-row">
+              <div class="bar-chart-label">
+                <span>BM25 Sparse</span>
+                <span style="font-family: var(--font-mono);">0.74 (74.2%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 74.2%; background: #94a3b8;"></div>
+              </div>
+            </div>
+
+            <div class="bar-chart-row">
+              <div class="bar-chart-label">
+                <span>Dense Vector</span>
+                <span style="font-family: var(--font-mono);">0.79 (79.5%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 79.5%; background: #64748b;"></div>
+              </div>
+            </div>
+
+            <div class="bar-chart-row">
+              <div class="bar-chart-label">
+                <span>Hybrid (Dense + BM25)</span>
+                <span style="font-family: var(--font-mono);">0.89 (89.2%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 89.2%; background: #4f46e5;"></div>
+              </div>
+            </div>
+
+            <div class="bar-chart-row">
+              <div class="bar-chart-label">
+                <span>Hybrid + Reranker</span>
+                <span style="font-family: var(--font-mono);">0.95 (95.4%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 95.4%; background: #7c3aed;"></div>
+              </div>
+            </div>
+
+            <div class="bar-chart-row" style="margin-bottom: 0;">
+              <div class="bar-chart-label">
+                <span style="font-weight: 700; color: #047857;">Full Multimodal Pipeline</span>
+                <span style="font-family: var(--font-mono); font-weight: 700; color: #047857;">0.98 (98.2%)</span>
+              </div>
+              <div class="bar-track" style="height: 11px;">
+                <div class="bar-fill" style="width: 98.2%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Learnings Cards -->
+          <div class="insight-card">
+            <strong>Hybrid Search Eliminates Lexical Blindspots</strong>
+            Combining BM25 with Vector embeddings boosted Recall@5 by +16.0 percentage points, capturing both acronyms and semantic paraphrasing.
+          </div>
+
+          <div class="insight-card" style="border-left-color: #059669;">
+            <strong>Cross-Encoder Elevates Top-1 Precision</strong>
+            MRR rose from 0.69 to 0.81 with Cross-Encoder reranking, directly reducing context window noise for LLM generation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div class="footer-left">
+        <span>RAGForge Architecture Suite</span>
+        <span>•</span>
+        <span style="color: var(--indigo-600);">Empirical Evaluation Findings</span>
+      </div>
+      <div class="footer-right">Slide 5 of 6 — Quantitative Validation</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIDE 6: KNOWLEDGE GRAPH RAG (NEO4J) SUBGRAPH
+       ======================================================== -->
+  <div id="slide-6" class="slide-stage">
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <span class="slide-number-pill">SLIDE 06 / GRAPH RAG</span>
+        <div>
+          <h2 class="slide-heading">Knowledge Graph RAG: Neo4j Multi-Hop Traversal</h2>
+          <p class="slide-subheading">Connecting distributed concepts, inheritance hierarchies, and hardware dispatch mechanisms</p>
+        </div>
+      </div>
+      <div class="slide-badges">
+        <div class="infra-pill">Graph Engine: <strong>Neo4j 5.15 (Bolt 7687)</strong></div>
+        <div class="infra-pill">Query: <strong>Cypher Graph Traversal</strong></div>
+      </div>
+    </div>
+
+    <div class="slide-body">
+      <div class="graph-layout">
+        <!-- Left SVG Graph Visualization -->
+        <div class="graph-viz-container">
+          <div class="table-slide-title" style="margin-bottom: 0.5rem;">
+            <span>Entity Relationship Subgraph</span>
+            <span class="sub-tag">Neo4j Schema: (:Concept)-[:RELATION]->(:Mechanism)</span>
+          </div>
+
+          <div class="graph-canvas">
+            <!-- Professional Clean SVG Graph -->
+            <svg width="100%" height="100%" viewBox="0 0 680 380" style="overflow: visible;">
+              <defs>
+                <!-- Arrowhead marker -->
+                <marker id="arrow" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                </marker>
+                <marker id="arrow-active" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5" />
+                </marker>
+
+                <!-- Filter for subtle drop shadow on nodes -->
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+                </filter>
+              </defs>
+
+              <!-- Connection Lines & Labels -->
+              <!-- Polymorphism -> Virtual Functions -->
+              <line x1="120" y1="90" x2="280" y2="90" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#arrow-active)"/>
+              <rect x="175" y="78" width="55" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="202" y="90" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#4f46e5" text-anchor="middle">ENABLES</text>
+
+              <!-- Virtual Functions -> Vtable -->
+              <line x1="280" y1="90" x2="440" y2="90" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#arrow-active)"/>
+              <rect x="335" y="78" width="52" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="361" y="90" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#4f46e5" text-anchor="middle">BUILDS</text>
+
+              <!-- Vtable -> Dynamic Dispatch -->
+              <line x1="440" y1="90" x2="560" y2="190" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+              <rect x="480" y="130" width="56" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="508" y="142" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#64748b" text-anchor="middle">EXECUTES</text>
+
+              <!-- Vptr -> Vtable -->
+              <line x1="280" y1="260" x2="440" y2="90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+              <rect x="335" y="180" width="62" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="366" y="192" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#64748b" text-anchor="middle">POINTS_TO</text>
+
+              <!-- Object Instance -> Vptr -->
+              <line x1="120" y1="260" x2="280" y2="260" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+              <rect x="180" y="248" width="50" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="205" y="260" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#64748b" text-anchor="middle">CONTAINS</text>
+
+              <!-- Dynamic Dispatch -> Memory Offset -->
+              <line x1="560" y1="190" x2="440" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+              <rect x="475" y="240" width="62" height="18" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+              <text x="506" y="252" font-size="9" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#64748b" text-anchor="middle">RESOLVES_AT</text>
+
+              <!-- NODES -->
+              <!-- Node 1: Polymorphism -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="120" cy="90" r="32" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.5"/>
+                <text x="120" y="87" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#1e3a8a" text-anchor="middle">Runtime</text>
+                <text x="120" y="100" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#2563eb" text-anchor="middle">Polymorphism</text>
+              </g>
+
+              <!-- Node 2: Virtual Functions -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="280" cy="90" r="34" fill="#eef2ff" stroke="#4f46e5" stroke-width="2.5"/>
+                <text x="280" y="87" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#312e81" text-anchor="middle">Virtual</text>
+                <text x="280" y="100" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#4f46e5" text-anchor="middle">Functions</text>
+              </g>
+
+              <!-- Node 3: Vtable -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="440" cy="90" r="34" fill="#faf5ff" stroke="#a855f7" stroke-width="2.5"/>
+                <text x="440" y="87" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#581c87" text-anchor="middle">vtable</text>
+                <text x="440" y="100" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#9333ea" text-anchor="middle">(Method Ptrs)</text>
+              </g>
+
+              <!-- Node 4: Dynamic Dispatch -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="560" cy="190" r="34" fill="#ecfdf5" stroke="#10b981" stroke-width="2.5"/>
+                <text x="560" y="187" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#064e3b" text-anchor="middle">Dynamic</text>
+                <text x="560" y="200" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#059669" text-anchor="middle">Dispatch</text>
+              </g>
+
+              <!-- Node 5: Object Instance -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="120" cy="260" r="30" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                <text x="120" y="258" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#0f172a" text-anchor="middle">Object</text>
+                <text x="120" y="270" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#475569" text-anchor="middle">Instance</text>
+              </g>
+
+              <!-- Node 6: vptr -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="280" cy="260" r="32" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+                <text x="280" y="257" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#78350f" text-anchor="middle">vptr</text>
+                <text x="280" y="270" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#d97706" text-anchor="middle">Pointer (8B)</text>
+              </g>
+
+              <!-- Node 7: Memory Offset -->
+              <g class="node-circle" filter="url(#shadow)">
+                <circle cx="440" cy="280" r="30" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                <text x="440" y="277" font-size="10" font-weight="800" font-family="'Plus Jakarta Sans', sans-serif" fill="#0f172a" text-anchor="middle">Memory</text>
+                <text x="440" y="289" font-size="9" font-weight="600" font-family="'Plus Jakarta Sans', sans-serif" fill="#475569" text-anchor="middle">Offset Index</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Right Side Cypher & Integration -->
+        <div class="graph-side-panel">
+          <!-- Cypher Query Box -->
+          <div class="card">
+            <div class="card-title">Cypher Traversal Query</div>
+            <div class="code-block">
+<span class="keyword">MATCH</span> (p:<span class="node">Concept</span> {name: <span class="rel">"Runtime Polymorphism"</span>})
+<span class="keyword">MATCH</span> (p)-[:<span class="rel">ENABLES</span>]->(v:<span class="node">Mechanism</span>)
+<span class="keyword">MATCH</span> (v)-[:<span class="rel">BUILDS</span>]->(t:<span class="node">VTable</span>)
+<span class="keyword">MATCH</span> (obj)-[:<span class="rel">POINTS_TO</span>]->(t)
+<span class="keyword">RETURN</span> p, v, t, obj
+<span class="keyword">LIMIT</span> 25;</div>
+          </div>
+
+          <!-- Why Graph RAG Card -->
+          <div class="card" style="flex: 1;">
+            <div class="card-title">Why Graph RAG is Essential</div>
+            <div class="preview-box" style="margin-bottom: 0.65rem;">
+              <strong>Vector Distance Limitation:</strong><br>
+              Vector embeddings struggle with multi-hop questions like <em>"How does a call through a base pointer reach the derived override?"</em> because the answer requires linking 4 separate concepts across 3 textbook chapters.
+            </div>
+            <div class="preview-box">
+              <strong>Graph Augmentation:</strong><br>
+              Neo4j extracts entity subgraphs and prepends the relationship path directly into the prompt context alongside hybrid vector chunks.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div class="footer-left">
+        <span>RAGForge Architecture Suite</span>
+        <span>•</span>
+        <span style="color: var(--indigo-600);">Knowledge Graph Augmentation</span>
+      </div>
+      <div class="footer-right">Slide 6 of 6 — Multi-Hop Reasoning</div>
+    </div>
+  </div>
+
+  <script>
+    function switchSlide(num) {
+      // Hide all slides
+      document.querySelectorAll('.slide-stage').forEach(slide => {
+        slide.classList.remove('active');
+      });
+      // Deactivate all buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show selected slide
+      const targetSlide = document.getElementById('slide-' + num);
+      if (targetSlide) {
+        targetSlide.classList.add('active');
+      }
+
+      // Activate clicked button
+      const buttons = document.querySelectorAll('.tab-btn');
+      if (num === 3) buttons[0].classList.add('active');
+      if (num === 4) buttons[1].classList.add('active');
+      if (num === 5) buttons[2].classList.add('active');
+      if (num === 6) buttons[3].classList.add('active');
+    }
+  </script>
+</body>
+</html>

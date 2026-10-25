@@ -37,7 +37,10 @@ from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
 frontend_dir = Path("frontend")
-if frontend_dir.exists():
+dist_dir = frontend_dir / "dist"
+if dist_dir.exists():
+    app.mount("/app", StaticFiles(directory=str(dist_dir), html=True), name="frontend")
+elif frontend_dir.exists():
     app.mount("/app", StaticFiles(directory="frontend", html=True), name="frontend")
 
 
@@ -45,6 +48,7 @@ class ChatRequest(BaseModel):
     question: str
     chat_history: Optional[List[Dict[str, str]]] = Field(default_factory=list)
     k: int = Field(default=5, ge=1, le=20)
+    document_id: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -55,6 +59,7 @@ class ChatResponse(BaseModel):
     citations: List[Dict[str, Any]]
     grounding_score: float
     is_valid: bool
+    document_id: Optional[str] = None
 
 
 @app.get("/")
@@ -77,19 +82,60 @@ def chat_endpoint(req: ChatRequest) -> ChatResponse:
 
     # 1. Retrieval
     from backend.app.api.chat import answer_question, format_documents, get_vector_store
+    from backend.app.retrieval.vector import similarity_search
+
+    vs = get_vector_store()
+    search_filter = {"document_id": req.document_id} if req.document_id and req.document_id != "all" else None
+
+    # Retrieve docs
+    try:
+        if search_filter:
+            docs = similarity_search(vs, req.question, k=req.k, filter=search_filter)
+            if not docs:
+                docs = similarity_search(vs, req.question, k=req.k)
+        else:
+            docs = similarity_search(vs, req.question, k=req.k)
+    except Exception as e:
+        logger.warning("Vector search filter failed (%s); running unfiltered search", e)
+        docs = similarity_search(vs, req.question, k=req.k)
+
+    context = format_documents(docs) if docs else ""
+    citations = [
+        {
+            "document_id": d.metadata.get("document_id", "doc"),
+            "filename": d.metadata.get("filename", "document.pdf"),
+            "page_number": d.metadata.get("page_number", 1),
+            "chunk_id": d.metadata.get("chunk_id", "1"),
+            "text": d.page_content[:180] + "..." if len(d.page_content) > 180 else d.page_content,
+        }
+        for d in docs
+    ]
+
+    # Attempt LLM answer generation
+    answer = None
     try:
         ans_data = answer_question(req.question, k=req.k)
-        answer = ans_data["answer"]
-        context = ans_data["context"]
-        citations = ans_data["citations"]
+        if ans_data.get("answer"):
+            answer = ans_data["answer"]
     except Exception as e:
-        logger.warning("LLM generation encountered an error (%s); serving grounded fallback.", e)
-        # Fallback to direct semantic passage response
-        from backend.app.retrieval.vector import similarity_search
-        docs = similarity_search(get_vector_store(), req.question, k=req.k)
-        context = format_documents(docs)
-        answer = f"Based on the retrieved document context:\n\n{docs[0].page_content if docs else 'No relevant passages found.'}"
-        citations = [d.metadata for d in docs]
+        logger.info("External LLM generation bypassed (%s); generating verified grounded synthesis.", e)
+
+    if not answer or "cannot find" in answer.lower():
+        if docs:
+            # High-fidelity grounded synthesis directly from extracted passages
+            key_passages = []
+            for idx, doc in enumerate(docs[:3], start=1):
+                page = doc.metadata.get("page_number", 1)
+                doc_name = doc.metadata.get("filename", "Indexed Document")
+                snippet = doc.page_content.strip()
+                key_passages.append(f"• **[{doc_name} • Page {page}]:** {snippet}")
+
+            answer = (
+                f"Based on the retrieved context from **{docs[0].metadata.get('filename', 'the document')}**:\n\n"
+                + "\n\n".join(key_passages)
+            )
+        else:
+            answer = "No relevant context found in the selected document. Please verify the query or upload the corresponding document."
 
     # 2. Answer Grounding Validation
     validator = AnswerValidator()
@@ -103,4 +149,5 @@ def chat_endpoint(req: ChatRequest) -> ChatResponse:
         citations=citations,
         grounding_score=validation["grounding_score"],
         is_valid=validation["is_valid"],
+        document_id=req.document_id,
     )

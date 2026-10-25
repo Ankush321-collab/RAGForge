@@ -1,9 +1,12 @@
+# Production Nginx container serving RAGForge React Dashboard
 FROM nginx:alpine
 
-# Copy frontend static files into Nginx public webroot
-COPY frontend/ /usr/share/nginx/html/
+# Copy pre-built production assets from frontend/dist
+COPY frontend/dist/ /usr/share/nginx/html/
 
-# Expose HTTP port
+# Copy Nginx SPA & reverse proxy configuration
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

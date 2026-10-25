@@ -1,7 +1,7 @@
 services:
   # 1. Local S3 Storage (MinIO)
   minio:
-    image: minio/minio:latest
+    image: cgr.dev/chainguard/minio:latest
     container_name: ragforge-minio
     restart: unless-stopped
     ports:
@@ -13,25 +13,7 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
-  # Helper service to ensure 'ragforge' bucket is automatically created
-  minio-init:
-    image: minio/mc:latest
-    container_name: ragforge-minio-init
-    depends_on:
-      minio:
-        condition: service_started
-    entrypoint: >
-      /bin/sh -c "
-      until /usr/bin/mc alias set localminio http://minio:9000 minioadmin minioadminpassword; do echo 'Waiting for MinIO...'; sleep 1; done;
-      /usr/bin/mc mb localminio/ragforge || true;
-      exit 0;
-      "
 
   # 2. Local OpenSearch Vector & BM25 Store
   opensearch:

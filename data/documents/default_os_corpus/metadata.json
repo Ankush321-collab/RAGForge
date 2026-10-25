@@ -1,0 +1,1065 @@
+{
+  "document_id": "default_os_corpus",
+  "filename": "os_notes.pdf",
+  "object_key": "documents/default_os_corpus/os_notes.pdf",
+  "content_type": "application/pdf",
+  "size_bytes": 4838889,
+  "num_pages": 92,
+  "num_chunks": 868,
+  "num_images": 2,
+  "status": "indexed",
+  "entities": [
+    {
+      "name": "Microsoft",
+      "entity_type": "Organization",
+      "description": "Organization mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "Kernel",
+      "entity_type": "OS_Concept",
+      "description": "OS_Concept mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "Process",
+      "entity_type": "OS_Concept",
+      "description": "OS_Concept mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "Cpu Scheduling",
+      "entity_type": "OS_Concept",
+      "description": "OS_Concept mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "Virtual Memory",
+      "entity_type": "OS_Concept",
+      "description": "OS_Concept mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "System Call",
+      "entity_type": "OS_Concept",
+      "description": "OS_Concept mentioned in passage",
+      "properties": {}
+    },
+    {
+      "name": "Lecture Notes",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Operating System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Computer System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Abstract View",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Components",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "User View",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System View",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Process Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Memory Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "File Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Storage Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Distributed Systems",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Protection System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Interpreter System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Structures",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Calls",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Programs",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Structure",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Virtual Machines",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Design",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Generation",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Common System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Main Memory",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Secondary Management",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Mainframe Systems",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Batch Processing",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Multiprogramming Operating",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Operating Systems",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Multiprocessor Operating",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Distributed Operating",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Resources Sharing",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Desktop Systems",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Personal Computer",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Microsoft Windows",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Apple Macintosh",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "The Apple",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Time Operating",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Program Execution",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "File System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Error Detection",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "An Operating",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Layer",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Layer Structure",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Microkernel System",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Models",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Machine Virtual",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Architecture",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "System Operation",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Common Functions",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Interrupt Handling",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Interrupt Time",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Line For",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Single Process",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Doing Output",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Synchronous Asynchronous",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Status Table",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    }
+  ],
+  "relationships": [
+    {
+      "source": "Operating System",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "What is an Operating System?"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "System Programs",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0f0 An operating System is a collection of system programs that together control the operations of a computer"
+      }
+    },
+    {
+      "source": "System Programs",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0f0 An operating System is a collection of system programs that together control the operations of a computer"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Some examples of operating systems are UNIX, Mach, MS -DOS, MS-Windows, Windows/NT, Chicago, OS/2,"
+      }
+    },
+    {
+      "source": "Computer System",
+      "target": "System Components",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Computer System Components"
+      }
+    },
+    {
+      "source": "Abstract View",
+      "target": "System Components",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Abstract View of System Components"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Operating systems can be explored from two viewpoints: the user and the system"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "System View",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "System View: From the computer's point of view, an operating system is a control program that manages the"
+      }
+    },
+    {
+      "source": "System View",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "System View: From the computer's point of view, an operating system is a control program that manages the"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Process Management",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Process Management"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The operating system is responsible for the following activities in connection with process management"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Process Management",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The operating system is responsible for the following activities in connection with process management"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Memory Management",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The operating system is responsible for the following activities in connections with memory management:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "File Management",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The operating system is responsible for the following activities in connections with file management:"
+      }
+    },
+    {
+      "source": "Computer System",
+      "target": "Main Memory",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "permanently, the computer system must provide secondary storage to back up main memory"
+      }
+    },
+    {
+      "source": "System Structures",
+      "target": "System Structure",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Operating-System Structures"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "System Calls",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0b7 System Calls"
+      }
+    },
+    {
+      "source": "System Components",
+      "target": "Common System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Common System Components"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Process Management",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0b7 Process Management"
+      }
+    },
+    {
+      "source": "Memory Management",
+      "target": "Main Memory",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0b7 Main Memory Management"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Batch Processing Operating System:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Batch Processing",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Batch Processing Operating System:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Multiprogramming Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprogramming Operating System:"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Single Process",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0dc This type of OS is used to execute more than one jobs simultaneously by a single processor"
+      }
+    },
+    {
+      "source": "Cpu Scheduling",
+      "target": "Operating System",
+      "relation_type": "USES",
+      "properties": {
+        "context": "Multiprogramming operating systems use the mechanism of job scheduling and CPU scheduling"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Multiprogramming Operating",
+      "relation_type": "USES",
+      "properties": {
+        "context": "Multiprogramming operating systems use the mechanism of job scheduling and CPU scheduling"
+      }
+    },
+    {
+      "source": "Multiprogramming Operating",
+      "target": "Operating Systems",
+      "relation_type": "USES",
+      "properties": {
+        "context": "Multiprogramming operating systems use the mechanism of job scheduling and CPU scheduling"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Time-Sharing/multitasking Operating Systems"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor Operating Systems"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor Operating Systems"
+      }
+    },
+    {
+      "source": "Operating Systems",
+      "target": "Multiprocessor Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor Operating Systems"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor operating systems are also known  as parallel OS or  tightly coupled OS"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor operating systems are also known  as parallel OS or  tightly coupled OS"
+      }
+    },
+    {
+      "source": "Operating Systems",
+      "target": "Multiprocessor Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Multiprocessor operating systems are also known  as parallel OS or  tightly coupled OS"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The multiprocessor operating systems are classified into two categories:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The multiprocessor operating systems are classified into two categories:"
+      }
+    },
+    {
+      "source": "Operating Systems",
+      "target": "Multiprocessor Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The multiprocessor operating systems are classified into two categories:"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0dc In symmetric multiprocessing system, each processor runs an identical copy of the operating system, and"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Distributed Operating Systems"
+      }
+    },
+    {
+      "source": "Operating Systems",
+      "target": "Distributed Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Distributed Operating Systems"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0dc In this system, the operating systems on all the machines work together to manage the collective network"
+      }
+    },
+    {
+      "source": "Computer System",
+      "target": "Desktop Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Desktop Systems/Personal Computer Systems"
+      }
+    },
+    {
+      "source": "Desktop Systems",
+      "target": "Personal Computer",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Desktop Systems/Personal Computer Systems"
+      }
+    },
+    {
+      "source": "Microsoft",
+      "target": "Microsoft Windows",
+      "relation_type": "INCLUDES",
+      "properties": {
+        "context": "\uf0dc These systems include PCs running Microsoft Windows and the Apple Macintosh"
+      }
+    },
+    {
+      "source": "Microsoft Windows",
+      "target": "Apple Macintosh",
+      "relation_type": "INCLUDES",
+      "properties": {
+        "context": "\uf0dc These systems include PCs running Microsoft Windows and the Apple Macintosh"
+      }
+    },
+    {
+      "source": "Apple Macintosh",
+      "target": "The Apple",
+      "relation_type": "INCLUDES",
+      "properties": {
+        "context": "\uf0dc These systems include PCs running Microsoft Windows and the Apple Macintosh"
+      }
+    },
+    {
+      "source": "Microsoft",
+      "target": "Microsoft Windows",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "system from Microsoft has been superseded by multiple flavors of Microsoft Windows and IBM has"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Apple Macintosh",
+      "relation_type": "INCLUDES",
+      "properties": {
+        "context": "\uf0dc The Apple Macintosh operating system has been ported to more advanced hardware, and now includes new"
+      }
+    },
+    {
+      "source": "Apple Macintosh",
+      "target": "The Apple",
+      "relation_type": "INCLUDES",
+      "properties": {
+        "context": "\uf0dc The Apple Macintosh operating system has been ported to more advanced hardware, and now includes new"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Real-Time Operating Systems (RTOS)"
+      }
+    },
+    {
+      "source": "Operating Systems",
+      "target": "Time Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Real-Time Operating Systems (RTOS)"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Time Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0dc A real-time operating system (RTOS) is a multitasking operating system intended for applications with fixed"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Time Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0dc   The real time operating system can be classified into two categories:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Following are the five services provided by operating systems to the convenience of the users"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Cpu Scheduling",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "allocating and deallocating memory, CPU scheduling in case of multiprocessing"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Following are the three services provided by operating systems for ensuring the efficient operation of"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "USES",
+      "properties": {
+        "context": "The operating systems keep track of which users use how many and which kinds of computer resources"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "System Call",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls provide an interface between the process and the operating system"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls provide an interface between the process and the operating system"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "System Calls",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls provide an interface between the process and the operating system"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "System Call",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls allow user-level processes to request some services from the operating system which process"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls allow user-level processes to request some services from the operating system which process"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "System Calls",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 System calls allow user-level processes to request some services from the operating system which process"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "System Call",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 For example, for I/O a process involves a system call telling the operating system to read or write particular"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0d8 For example, for I/O a process involves a system call telling the operating system to read or write particular"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The following different types of system calls provided by an operating system:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "System Calls",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The following different types of system calls provided by an operating system:"
+      }
+    },
+    {
+      "source": "System Calls",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "The following different types of system calls provided by an operating system:"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "An Operating System Layer"
+      }
+    },
+    {
+      "source": "An Operating",
+      "target": "System Layer",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "An Operating System Layer"
+      }
+    },
+    {
+      "source": "Kernel",
+      "target": "System Structure",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Microkernel System Structure"
+      }
+    },
+    {
+      "source": "System Structure",
+      "target": "Microkernel System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Microkernel System Structure"
+      }
+    },
+    {
+      "source": "Kernel",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "operating system kernel as though they were all hardware"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0b7 The operating system creates the illusion of multiple processes, each executing on its own processor"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Cpu Scheduling",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\u2726 CPU scheduling can create the appearance that users have their own processor"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "Operating Systems",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Operating systems are designed to run on any of a class of machines at a variety of sites with a variety"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "System Generation",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "process sometimes known as system generation (SYSGEN)"
+      }
+    },
+    {
+      "source": "Kernel",
+      "target": "Main Memory",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "This code is able to l ocate the kernel, load it into main memory, and start its execution"
+      }
+    },
+    {
+      "source": "Operating System",
+      "target": "An Operating",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\uf0b7 An operating system is interrupt driven"
+      }
+    },
+    {
+      "source": "Process",
+      "target": "Interrupt Time",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Interrupt Time Line For a Single Process Doing Output"
+      }
+    },
+    {
+      "source": "Interrupt Time",
+      "target": "Line For",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Interrupt Time Line For a Single Process Doing Output"
+      }
+    },
+    {
+      "source": "Line For",
+      "target": "Single Process",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Interrupt Time Line For a Single Process Doing Output"
+      }
+    },
+    {
+      "source": "Single Process",
+      "target": "Doing Output",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Interrupt Time Line For a Single Process Doing Output"
+      }
+    },
+    {
+      "source": "System Call",
+      "target": "Operating System",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "\u2726 System call \u2013 request to the operating system to allow user to wait for I/O completion"
+      }
+    }
+  ]
+}

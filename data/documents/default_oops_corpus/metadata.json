@@ -1,0 +1,143 @@
+{
+  "document_id": "default_oops_corpus",
+  "filename": "oops_notes.pdf",
+  "object_key": "documents/default_oops_corpus/oops_notes.pdf",
+  "content_type": "application/pdf",
+  "size_bytes": 10623910,
+  "num_pages": 145,
+  "num_chunks": 317,
+  "num_images": 2,
+  "status": "indexed",
+  "entities": [
+    {
+      "name": "Object Oriented",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Programming Paradigms",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Imperative Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Declarative Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Procedural Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Oriented Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Parallel Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Logical Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Functional Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Database Programming",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Using Accessor",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Deep Copy",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Non Parameterized",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Parameterized Constructor",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "With Parameters",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    },
+    {
+      "name": "Copy Constructor",
+      "entity_type": "Concept",
+      "description": "",
+      "properties": {}
+    }
+  ],
+  "relationships": [
+    {
+      "source": "Object Oriented",
+      "target": "Oriented Programming",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Object Oriented Programming"
+      }
+    },
+    {
+      "source": "Object Oriented",
+      "target": "Oriented Programming",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "OOPs = Object oriented programming structure"
+      }
+    },
+    {
+      "source": "Deep Copy",
+      "target": "Copy Constructor",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Deep Copy Constructor :-"
+      }
+    },
+    {
+      "source": "Non Parameterized",
+      "target": "Parameterized Constructor",
+      "relation_type": "RELATED_TO",
+      "properties": {
+        "context": "Default / Non Parameterized Constructor \u2013"
+      }
+    }
+  ]
+}

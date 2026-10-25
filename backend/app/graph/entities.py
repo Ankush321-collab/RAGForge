@@ -27,6 +27,7 @@ class EntityExtractor:
         (r"\b(GPT-4|GPT-3\.5|Claude|Mistral|Llama|BERT|ResNet|EfficientNet)\b", "Model"),
         (r"\b(OpenAI|Anthropic|Meta|Google|Microsoft|Amazon)\b", "Organization"),
         (r"\b(Polymorphism|Inheritance|Encapsulation|Abstraction|Virtual Functions?|vtable|vptr|Dynamic Dispatch)\b", "Concept"),
+        (r"\b(Process|Thread|Semaphore|Mutex|Deadlock|Virtual Memory|Paging|Page Fault|CPU Scheduling|Context Switch|PCB|Kernel|User Mode|System Call|Demand Paging|Thrashing|Banker's Algorithm)\b", "OS_Concept"),
         (r"\b(BM25|Dense Retrieval|Sparse Retrieval|Reranker|Cross-Encoder|HyDE|RRF)\b", "Technique"),
         (r"\b(ChromaDB|OpenSearch|Elasticsearch|Neo4j|S3|PostgreSQL)\b", "Database"),
         (r"\b(Recall@[0-9]+|MRR|NDCG|Precision@[0-9]+|F1[-_ ]Score|Accuracy)\b", "Metric"),

@@ -19,6 +19,7 @@ class SearchRequest(BaseModel):
     candidate_k: int = Field(default=20, ge=1, le=100)
     mode: str = Field(default="hybrid", description="'hybrid', 'vector_only', or 'bm25_only'")
     filter: Optional[Dict[str, Any]] = None
+    document_id: Optional[str] = None
     rerank: bool = True
 
 
@@ -26,6 +27,7 @@ class SearchHit(BaseModel):
     id: Optional[str] = None
     chunk_id: Optional[str] = None
     document_id: Optional[str] = None
+    filename: Optional[str] = None
     page_number: Optional[int] = 1
     score: Optional[float] = None
     rerank_score: Optional[float] = None
@@ -45,6 +47,10 @@ def execute_search(req: SearchRequest) -> SearchResponse:
     tracer = QueryTracer(req.query)
     t0 = time.time()
 
+    search_filter = req.filter or {}
+    if req.document_id and req.document_id != "all":
+        search_filter["document_id"] = req.document_id
+
     try:
         from backend.app.api.chat import get_vector_store
         vector_store = get_vector_store()
@@ -53,7 +59,7 @@ def execute_search(req: SearchRequest) -> SearchResponse:
 
     hybrid_retriever = HybridRetriever(
         vector_store=vector_store,
-        bm25_retriever=None,  # Or corpus retriever
+        bm25_retriever=None,
     )
 
     t_ret_start = time.time()
@@ -62,7 +68,7 @@ def execute_search(req: SearchRequest) -> SearchResponse:
             query=req.query,
             top_k=req.top_k if not req.rerank else req.candidate_k,
             mode=req.mode,
-            filter=req.filter,
+            filter=search_filter if search_filter else None,
         )
     except Exception as e:
         hits = []
